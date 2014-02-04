@@ -11,10 +11,10 @@ import modelsg.current.activityRepo
 import modelsg.current.activityRepo.profile.simple._
 
 object Test extends Controller {
-  
+
   def test1 = DBAction { implicit rs =>
     
-	val data = activityRepo.findByName("xy").firstOption
+	val data = activityRepo.findByName("xzy").firstOption
 //	var data = activityRepo.findByName("xy").firstOption
 	
     Ok(data.toString)     
@@ -22,7 +22,7 @@ object Test extends Controller {
   
   def test2 = DBAction { implicit rs =>
     
-	val data = activityRepo.findByName("xyxd").firstOption
+	val data = activityRepo.findByName("ysd").firstOption
 //	var data = activityRepo.findByName("xy").firstOption
 	
     Ok(data.toString)
