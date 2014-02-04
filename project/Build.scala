@@ -1,7 +1,7 @@
 import sbt._
 import Keys._
 import play.Project._
-import com.typesafe.sbt.SbtScalariform.scalariformSettings
+//import com.typesafe.sbt.SbtScalariform.scalariformSettings
 
 object ApplicationBuild extends Build {
 
@@ -17,7 +17,7 @@ object ApplicationBuild extends Build {
 	"com.typesafe.slick" %% "slick" % "2.0.0",
 	"com.h2database" % "h2" % "1.3.170",
 	"org.scalatest" %% "scalatest" % "2.0" % "test",
-	"com.typesafe.play" %% "play-slick" % "0.6.0-SNAPSHOT" 
+	"com.typesafe.play" %% "play-slick" % "0.6.0-SNAPSHOT"
   )
 
   val main = play.Project(appName, appVersion, appDependencies).settings(
@@ -25,6 +25,7 @@ object ApplicationBuild extends Build {
    // resolvers += "svnkit repo" at "http://maven.tmatesoft.com/content/repositories/releases/"
 	resolvers += "Sonatype snapshots" at "http://oss.sonatype.org/content/repositories/snapshots/"
       
-  )//.settings(scalariformSettings:_*)
+  ) //.dependsOn(RootProject(file("../play-slick/")))
+  //.settings(scalariformSettings:_*)
 
 }
