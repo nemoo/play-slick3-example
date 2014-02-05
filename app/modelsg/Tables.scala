@@ -6,10 +6,11 @@ import play.api.db.slick.Profile
  *  @param id Database column ID AutoInc, PrimaryKey
  *  @param name Database column NAME 
  *    */
-case class Activity(id: Int, atype: String)
+case class Activity(id: Int, name: String)
+case class Item(id: Int, color: String)
 
 /** Slick data model trait for extension, choice of backend or usage in the cake pattern. (Make sure to initialize this late.) */
-trait Tables2 { this: Profile =>
+trait Tables { this: Profile =>
   import profile.simple._
   
   import scala.slick.model.ForeignKeyAction
@@ -28,5 +29,17 @@ trait Tables2 { this: Profile =>
     val name: Column[String] = column[String]("NAME")
     
    }
+  
+  class Items(tag: Tag) extends Table[Item](tag, "ACTIVITY") {
+    def * = (id, color) <> (Item.tupled, Item.unapply)
+    /** Maps whole row to an option. Useful for outer joins. */
+    def ? = (id.?, color.?).shaped.<>({r=>import r._; _1.map(_=> Item.tupled((_1.get, _2.get)))}, (_:Any) =>  throw new Exception("Inserting into ? projection not supported."))
+    
+    /** Database column ID AutoInc, PrimaryKey */
+    val id: Column[Int] = column[Int]("ID", O.AutoInc, O.PrimaryKey)
+    /** Database column COLOR  */
+    val color: Column[String] = column[String]("COLOR")
+    
+   }  
   
 }
