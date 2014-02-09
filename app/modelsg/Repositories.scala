@@ -11,11 +11,17 @@ import play.api.db.slick.Profile
 
 class ActivityRepo(override val profile: JdbcProfile) extends Tables with Profile {
   import profile.simple._
-//  private val Activities = TableQuery[Activities]
-  private val Activities = new TableQuery(tag => new Activities(tag))
+  private val Activities = TableQuery[Activities]
+//  private val Activities = new TableQuery(tag => new Activities(tag))
 
   def findByName(name: String)(implicit session: Session) =
     Activities.filter(_.name === name).first
+    
+  def all(implicit session: Session) =
+    Activities.list 
+    
+  def insert(a: Activity)(implicit session: Session) =
+    Activities += a
  
 } 
 

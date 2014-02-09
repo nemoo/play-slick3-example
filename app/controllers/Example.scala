@@ -7,6 +7,7 @@ import play.api.libs.json._
 import play.api.db.slick._
 
 import play.api.db.slick.DBAction
+import modelsg.Activity
 import modelsg.current.activityRepo
 import modelsg.current.itemRepo
 import modelsg.current.activityRepo.profile.simple._
@@ -37,4 +38,13 @@ object Test extends Controller {
 	
     Ok(activity.toString + item.toString)     
   }    
+  
+  def addItem = DBAction { implicit rs =>
+    
+	activityRepo insert Activity(999, "newActivity")
+	
+	println(activityRepo.all)
+
+    Ok("")     
+  }     
 }
