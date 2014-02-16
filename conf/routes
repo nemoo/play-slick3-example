@@ -1,5 +1,5 @@
 
 
-GET    /test1                                controllers.Test.test1
+GET    /test1                                controllers.Application.test1
 
 

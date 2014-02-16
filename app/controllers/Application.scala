@@ -19,7 +19,7 @@ import play.api.Play.current
 import views._
 import models._
 
-object Test extends Controller {
+object Application extends Controller {
 
   def test1 = DBAction { implicit rs =>
     
