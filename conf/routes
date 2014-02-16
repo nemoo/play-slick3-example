@@ -1,6 +1,5 @@
 
 
 GET    /test1                                controllers.Test.test1
-GET    /test2                                controllers.Test.test2
-GET    /add                                  controllers.Test.addItem
+
 
