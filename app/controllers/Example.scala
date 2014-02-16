@@ -23,7 +23,7 @@ object Test extends Controller {
 
   def test1 = DBAction { implicit rs =>
     
-	val data = Items.findByColor("xzy")
+	val data = Items.findByColor("blue")
 	val data2 = Activities.findByName("xzy")
 //	var data = activityRepo.findByName("xy").firstOption
 	

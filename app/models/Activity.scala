@@ -16,7 +16,7 @@ class ActivitiesTable(tag: Tag) extends Table[Activity](tag, "ACTIVITY") {
 object Activities extends DAO {
 
   def findByName(name: String)(implicit session: Session) =
-    Activities.filter(_.name === name).first
+    Activities.filter(_.name === name).firstOption
 
   def all(implicit session: Session) =
     Activities.list
