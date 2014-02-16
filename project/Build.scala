@@ -17,7 +17,7 @@ object ApplicationBuild extends Build {
 	"com.typesafe.slick" %% "slick" % "2.0.0",
 	"com.h2database" % "h2" % "1.3.170",
 	"org.scalatest" %% "scalatest" % "2.0" % "test",
-	"com.typesafe.play" %% "play-slick" % "0.6.0.1-SNAPSHOT"
+	"com.typesafe.play" %% "play-slick" % "0.6.0.1"
   )
 
   val main = play.Project(appName, appVersion, appDependencies).settings(
