@@ -14,7 +14,7 @@ object ApplicationBuild extends Build {
     jdbc,
     anorm,
     "mysql" % "mysql-connector-java" % "5.1.28",     
-	"com.typesafe.slick" %% "slick" % "2.0.0",
+	"com.typesafe.slick" %% "slick" % "2.0.1-RC1",
 	"com.h2database" % "h2" % "1.3.170",
 	"org.scalatest" %% "scalatest" % "2.0" % "test",
 	"com.typesafe.play" %% "play-slick" % "0.6.0.1"

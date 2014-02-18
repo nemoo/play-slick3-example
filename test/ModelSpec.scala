@@ -23,7 +23,7 @@ class ModelSpec extends Specification {
       running(FakeApplication(additionalConfiguration = inMemoryDatabase())) {
         DB.withSession{ implicit s =>
           val Some(item) = Items.findByColor("blue")
-          Items.count must be_==(3)
+          Items.count must be_==(5)
           item.color must equalTo("blue")            
         }        
       }
@@ -33,11 +33,11 @@ class ModelSpec extends Specification {
       running(FakeApplication(additionalConfiguration = inMemoryDatabase())) {
         
         DB.withSession{ implicit s =>
-          Items.insert(Item(99,"black"))
+          Items.insert(Item(99,"black", 1))
           
           val Some(item) = Items.findByColor("black")      
           item.color must equalTo("black")  
-          Items.count must be_==(4)
+          Items.count must be_==(6)
         }
       }
     }
@@ -47,11 +47,22 @@ class ModelSpec extends Specification {
       running(FakeApplication(additionalConfiguration = inMemoryDatabase())) {
         
         DB.withSession{ implicit s =>
-          Items.count must be_==(3)
-          Items.findByColor("black") must beNone      
+          Items.count must be_==(5)
+          Items.findByColor("cyan") must beNone      
         }
       }
     }   
+    
+    "be selectable distinct" in {
+      running(FakeApplication(additionalConfiguration = inMemoryDatabase())) {
+        
+        DB.withSession{ implicit s =>
+          val results = Items.distinctTest
+          results.map(x => println(x.name))
+          results must have size(2)      
+        }
+      }
+    }       
     
   }
   

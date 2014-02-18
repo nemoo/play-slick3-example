@@ -25,10 +25,16 @@ object InitialData {
   def insert() {
     DB.withSession { implicit s: Session =>
       if (Items.count == 0) {
+        val aid = Activities.insert(Activity(99, "first"))
+        val aid2 = Activities.insert(Activity(99, "second"))
+        Activities.insert(Activity(99, "third"))
+   
         Seq(
-          Item(99, "blue"),
-          Item(99, "red"),
-          Item(99, "green")).foreach(Items.insert)
+          Item(99, "blue", aid),
+          Item(99, "red", aid),
+          Item(99, "green", aid),
+          Item(99, "white", aid2),
+          Item(99, "black", aid2)).foreach(Items.insert)
 
 
       }
