@@ -22,6 +22,6 @@ RUN git clone https://github.com/nemoo/play-slick-example.git
 RUN cd play-slick-example
 RUN sbt compile
 
-CMD ["/home/play-slick-example/sbt","run"]
+CMD cd /play-slick-example && sbt run
 
 EXPOSE 9000
