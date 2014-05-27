@@ -7,7 +7,7 @@ FROM      ubuntu:trusty
 # make sure the package repository is up to date
 RUN echo "deb http://archive.ubuntu.com/ubuntu trusty main universe" > /etc/apt/sources.list
 RUN apt-get update
-RUN apt-get install -y git default-jdk htop unzip wget
+RUN apt-get install -y --no-install-recommends git default-jdk htop unzip wget
 
 #===sbt
 RUN wget http://apt.typesafe.com/repo-deb-build-0002.deb
@@ -19,5 +19,9 @@ RUN wget -O /root/.sbt/.lib/0.13.1/sbt-launch.jar http://typesafe.artifactoryonl
 
 RUN cd /home
 RUN git clone https://github.com/nemoo/play-slick-example.git
+RUN cd play-slick-example
+RUN sbt compile
+
+CMD ["/home/play-slick-example/sbt","run"]
 
 EXPOSE 9000
