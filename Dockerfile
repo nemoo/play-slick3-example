@@ -20,8 +20,8 @@ RUN wget -O /root/.sbt/.lib/0.13.1/sbt-launch.jar http://typesafe.artifactoryonl
 # create a distribution from the source
 RUN git clone https://github.com/nemoo/play-slick-example.git
 RUN cd /play-slick-example && sbt dist
-RUN unzip /play-slick-example/target/universal/test-1.0-SNAPSHOT.zip
+RUN unzip /play-slick-example/target/universal/play-slick-example-1.0-SNAPSHOT.zip
 
-CMD test-1.0-SNAPSHOT/bin/test -DapplyEvolutions.default=true
+CMD play-slick-example-1.0-SNAPSHOT/bin/play-slick-example -DapplyEvolutions.default=true
 
 EXPOSE 9000

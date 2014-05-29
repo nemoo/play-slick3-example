@@ -5,7 +5,7 @@ import play.Project._
 
 object ApplicationBuild extends Build {
 
-  val appName         = "test"
+  val appName         = "play-slick-example"
   val appVersion      = "1.0-SNAPSHOT"
     
 
