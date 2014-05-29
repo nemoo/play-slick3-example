@@ -8,7 +8,7 @@ To get it to run, just grab ubuntu 14.04 and run this:
 ```
 #install docker on ubuntu 14.04
 apt-get update
-apt-get install docker.io
+apt-get install -y docker.io
 ln -sf /usr/bin/docker.io /usr/local/bin/docker
 #get dockerfile
 cd /home
