@@ -19,8 +19,7 @@ RUN wget -O /root/.sbt/.lib/0.13.1/sbt-launch.jar http://typesafe.artifactoryonl
 
 RUN cd /home
 RUN git clone https://github.com/nemoo/play-slick-example.git
-RUN cd play-slick-example
-RUN sbt compile
+RUN cd /play-slick-example && sbt compile
 
 CMD cd /play-slick-example && sbt run
 
