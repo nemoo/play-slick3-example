@@ -7,10 +7,7 @@ First, build the docker image. This will take the Dockerfile directly from githu
 ```
 docker build -t nemoo/play-slick-example github.com/nemoo/play-slick-example
 ```
-Then run the newly created image, exposing the application on port 9000:
-```
-docker run -d -p 9000:9000 nemoo/play-slick-example
-```
+
 
 If you need to install docker on ubuntu, do this:
 ```
@@ -34,5 +31,24 @@ docker run -d -v /database:/var/lib/mysql -p 3306:3306 -e MYSQL_PASS="mypass" tu
 ```
 Now we actually run the database
 ```
-docker run -d -p 3306:3306 -v /database:/var/lib/mysql tutum/mysql
+docker run -d --name mysql -p 3306:3306 -v /database:/var/lib/mysql tutum/mysql
+```
+To connect from the host to the database in the container, first we install mysql on the host
+```
+apt-get install mysql-server-5.6
+```
+Then we run the newly created application image, exposing the application on port 9000 and linking it to the mysql container that handles the database:
+```
+docker run -d -p 9000:9000 --link mysql:db nemoo/play-slick-example
+```
+
+Creating the app server 
+First, copy your binary application into the appserver directory so that it can be injected to the appserver container from there. 
+Then, create the appserver docker image that is just a java installation that will run your app. In the appserver directory, run
+```
+docker build -t nemoo/play-slick-example-appserver .
+```
+Then we run the newly created application image, exposing the application on port 9000 and linking it to the mysql container that handles the database:
+```
+docker run -d -p 9000:9000 --link mysql:db nemoo/play-slick-example-appserver
 ```
