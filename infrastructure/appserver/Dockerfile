@@ -10,7 +10,8 @@ RUN apt-get update
 RUN apt-get install -y --no-install-recommends git default-jre htop unzip wget
 
 ADD /myapp.zip /
+RUN unzip myapp.zip
 
-CMD myapp/bin/play-slick-example -DapplyEvolutions.default=true
+CMD play-slick-example-1.0-SNAPSHOT/bin/play-slick-example -DapplyEvolutions.default=true
 
 EXPOSE 9000
