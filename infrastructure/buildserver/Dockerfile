@@ -7,7 +7,12 @@ FROM      ubuntu:14.04
 # make sure the package repository is up to date
 RUN echo "deb http://archive.ubuntu.com/ubuntu trusty main universe" > /etc/apt/sources.list
 RUN apt-get update
-RUN apt-get install -y --no-install-recommends git default-jdk htop unzip wget
+RUN apt-get install -y --no-install-recommends git htop unzip wget
+# java installation needs some special treatment
+RUN apt-get install software-properties-common python-software-properties
+RUN add-apt-repository ppa:webupd8team/java
+RUN apt-get update
+RUN apt-get install -y --no-install-recommends oracle-java7-installer
 
 #===install sbt
 RUN wget http://apt.typesafe.com/repo-deb-build-0002.deb
