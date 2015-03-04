@@ -12,40 +12,27 @@ import models._
 
 object Application extends Controller {
 
-  def test1 = DBAction { implicit rs =>
-    
-	val data = Items.findByColor("blue")
-	val data2 = Activities.findByName("xzy")
-//	var data = activityRepo.findByName("xy").firstOption
-	
-    Ok(data.toString)     
-  }  
-  
 
-  
-//  def test2 = DBAction { implicit rs =>
-//    
-//	val data = Activites.findByName("ysd")
-////	var data = activityRepo.findByName("xy").firstOption
-//	
-//    Ok(data.toString)
-//  }    
-//
-//  def test3 = DBAction { implicit rs =>
-//    
-//	val activity = Activites.findByName("xzy")
-//	val item = itemRepo.findByColor("blue").firstOption
-//
-//	
-//    Ok(activity.toString + item.toString)     
-//  }    
-//  
-//  def addItem = DBAction { implicit rs =>
-//    
-//	Activites insert Activity(999, "newActivity")
-//	
-//	println(Activites.all)
-//
-//    Ok("")     
-//  }     
+  def addTaskToProject(taskName: String, projectId: Long) = Action { implicit rs =>
+    DB.withSession{ implicit connection =>
+    	val project = Projects.findById(projectId).get
+    	
+      val newTaskId = Tasks insert Task(0,taskName,project.id)
+      
+      val task = Tasks.findById(newTaskId).get
+      
+      val tasksOfProject = Projects.findTasks(projectId)
+      
+      Ok("I have created " + task + " The project has now these tasks: " + tasksOfProject.mkString(", "))     
+    }
+  }  
+
+  def test1 = Action { implicit rs =>
+    DB.withSession{ implicit connection =>
+    	val data = Tasks.findByColor("blue")
+    	val data2 = Projects.findByName("xzy")
+      Ok(data.toString)     
+    }
+  }  
+    
 }

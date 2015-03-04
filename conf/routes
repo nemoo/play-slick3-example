@@ -1,6 +1,6 @@
 
 
-GET    /test1                                controllers.Application.test1
-GET    /	                                 controllers.Application.test1
+GET    /                                   controllers.Application.test1
+GET    /add/:name/to/:id                   controllers.Application.addTaskToProject(name: String, id: Long)
 
 

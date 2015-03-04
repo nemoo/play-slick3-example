@@ -24,17 +24,17 @@ object InitialData {
 
   def insert() {
     DB.withSession { implicit s: Session =>
-      if (Items.count == 0) {
-        val aid = Activities.insert(Activity(99, "first"))
-        val aid2 = Activities.insert(Activity(99, "second"))
-        Activities.insert(Activity(99, "third"))
+      if (Tasks.count == 0) {
+        val aid = Projects.insert(Project(99, "first"))
+        val aid2 = Projects.insert(Project(99, "second"))
+        Projects.insert(Project(99, "third"))
    
         Seq(
-          Item(99, "blue", aid),
-          Item(99, "red", aid),
-          Item(99, "green", aid),
-          Item(99, "white", aid2),
-          Item(99, "black", aid2)).foreach(Items.insert)
+          Task(99, "blue", aid),
+          Task(99, "red", aid),
+          Task(99, "green", aid),
+          Task(99, "white", aid2),
+          Task(99, "black", aid2)).foreach(Tasks.insert)
 
 
       }
