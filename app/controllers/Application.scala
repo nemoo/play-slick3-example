@@ -1,14 +1,5 @@
 package controllers
 
-//import play.api.mvc.Controller
-//import play.api.mvc.Action
-//import org.joda.time.DateTime
-//import play.api.libs.json._
-//
-//import play.api.db.slick._
-//
-//import play.api.db.slick.DBAction
-//import modelsg.Activities._
 import play.api._
 import play.api.mvc._
 import play.api.data._
