@@ -22,9 +22,9 @@ class ModelSpec extends Specification {
     "be retrieved by color" in {
       running(FakeApplication(additionalConfiguration = inMemoryDatabase())) {
         DB.withSession{ implicit s =>
-          val Some(item) = Items.findByColor("blue")
-          Items.count must be_==(5)
-          item.color must equalTo("blue")            
+          val Some(task) = Tasks.findByColor("blue")
+          Tasks.count must be_==(5)
+          task.color must equalTo("blue")            
         }        
       }
     }
@@ -33,11 +33,11 @@ class ModelSpec extends Specification {
       running(FakeApplication(additionalConfiguration = inMemoryDatabase())) {
         
         DB.withSession{ implicit s =>
-          Items.insert(Item(99,"black", 1))
+          Tasks.insert(Task(99,"black", 1))
           
-          val Some(item) = Items.findByColor("black")      
+          val Some(item) = Tasks.findByColor("black")      
           item.color must equalTo("black")  
-          Items.count must be_==(6)
+          Tasks.count must be_==(6)
         }
       }
     }
@@ -47,8 +47,8 @@ class ModelSpec extends Specification {
       running(FakeApplication(additionalConfiguration = inMemoryDatabase())) {
         
         DB.withSession{ implicit s =>
-          Items.count must be_==(5)
-          Items.findByColor("cyan") must beNone      
+          Tasks.count must be_==(5)
+          Tasks.findByColor("cyan") must beNone      
         }
       }
     }   
@@ -57,9 +57,9 @@ class ModelSpec extends Specification {
       running(FakeApplication(additionalConfiguration = inMemoryDatabase())) {
         
         DB.withSession{ implicit s =>
-          val results = Items.distinctTest
+          val results = Tasks.distinctTest
           results.map(x => println(x.name))
-          results must have size(2)      
+          results must have size(1)      
         }
       }
     }       

@@ -13,7 +13,7 @@ class IntegrationSpec extends Specification {
     
     "work from within a browser" in {
       running(TestServer(3333), HTMLUNIT) { browser =>
-        browser.goTo("http://localhost:3333/test1")
+        browser.goTo("http://localhost:3333")
 //        1 must be_==(1)
         val source = browser.pageSource()
         println(source)
