@@ -14,18 +14,18 @@ class ProjectsTable(tag: Tag) extends Table[Project](tag, "PROJECT") {
 
 object Projects extends DAO {
 
-  def findById(id: Long)(implicit s: Session) =
+  def findById(id: Long)(implicit s: Session): Option[Project] =
     Projects.filter(_.id === id).firstOption
 
-  def findByName(name: String)(implicit session: Session) =
+  def findByName(name: String)(implicit session: Session): Option[Project] =
     Projects.filter(_.name === name).firstOption
     
   def findTasks(id: Long)(implicit session: Session): List[Task] =
-      Tasks
-        .filter(_.project === id)
-        .list    
+    Tasks
+      .filter(_.project === id)
+      .list
 
-  def all(implicit session: Session) =
+  def all(implicit session: Session): List[Project] =
     Projects.list
 
   def insert(a: Project)(implicit session: Session): Long =

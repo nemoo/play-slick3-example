@@ -15,10 +15,10 @@ class TasksTable(tag: Tag) extends Table[Task](tag, "TASK") {
 
 object Tasks extends DAO {
 
-  def findByColor(color: String)(implicit s: Session) =
+  def findByColor(color: String)(implicit s: Session): Option[Task] =
     Tasks.filter(_.color === color).firstOption
 
-  def findById(id: Long)(implicit s: Session) =
+  def findById(id: Long)(implicit s: Session): Option[Task] =
       Tasks.filter(_.id === id).firstOption
   
   def insert(project: Task)(implicit session: Session): Long = {
