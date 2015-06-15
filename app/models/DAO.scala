@@ -1,6 +1,6 @@
 package models
 
-import play.api.db.slick.Config.driver.simple._
+import slick.driver.MySQLDriver.api._
 
 private[models] trait DAO {
   lazy val Projects = TableQuery[ProjectsTable]
