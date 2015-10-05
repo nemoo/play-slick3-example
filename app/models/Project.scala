@@ -9,18 +9,18 @@ import slick.driver.JdbcProfile
 
 case class Project(id: Long, name: String)
 
-class ProjectDAO @Inject()(protected val dbConfigProvider: DatabaseConfigProvider) extends HasDatabaseConfigProvider[JdbcProfile] {
-  //val dbConfig = dbConfigProvider.get[JdbcProfile]
+class ProjectDAO @Inject()(protected val dbConfigProvider: DatabaseConfigProvider) {
+  val dbConfig = dbConfigProvider.get[JdbcProfile]
 
-  import driver.api._
+  import dbConfig.driver.api._
 
   private val Projects = TableQuery[ProjectsTable]
 
   def findById(id: Long): Future[Option[Project]] =
-    db.run(Projects.filter(_.id === id).result.headOption)
+    dbConfig.db.run(Projects.filter(_.id === id).result.headOption)
 
   def findByName(name: String): Future[Option[Project]] =
-    db.run(Projects.filter(_.name === name).result.headOption)
+    dbConfig.db.run(Projects.filter(_.name === name).result.headOption)
 
   /*
   def findTasks(id: Long): List[Task] =
@@ -29,9 +29,9 @@ class ProjectDAO @Inject()(protected val dbConfigProvider: DatabaseConfigProvide
       .list
   */
 
-  def all(): Future[Seq[Project]] = db.run(Projects.result)
+  def all(): Future[Seq[Project]] = dbConfig.db.run(Projects.result)
 
-  def insert(Project: Project): Future[Unit] = db.run(Projects += Project).map { _ => () }
+  def insert(Project: Project): Future[Unit] = dbConfig.db.run(Projects += Project).map { _ => () }
 
 
   private class ProjectsTable(tag: Tag) extends Table[Project](tag, "PROJECT") {

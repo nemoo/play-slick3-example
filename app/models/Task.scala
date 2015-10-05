@@ -9,18 +9,18 @@ import slick.driver.JdbcProfile
 
 case class Task(id: Long, color: String, project: Long)
 
-class TaskDAO @Inject()(protected val dbConfigProvider: DatabaseConfigProvider) extends HasDatabaseConfigProvider[JdbcProfile] {
-  //val dbConfig = dbConfigProvider.get[JdbcProfile]
+class TaskDAO @Inject()(protected val dbConfigProvider: DatabaseConfigProvider) {
+  val dbConfig = dbConfigProvider.get[JdbcProfile]
 
-  import driver.api._
+  import dbConfig.driver.api._
 
   private val Tasks = TableQuery[TasksTable]
 
   def findById(id: Long): Future[Option[Task]] =
-    db.run(Tasks.filter(_.id === id).result.headOption)
+    dbConfig.db.run(Tasks.filter(_.id === id).result.headOption)
 
   def findByColor(color: String): Future[Option[Task]] =
-    db.run(Tasks.filter(_.color === color).result.headOption)
+    dbConfig.db.run(Tasks.filter(_.color === color).result.headOption)
 
   /*
   def count(implicit s: Session): Int =
@@ -33,9 +33,9 @@ class TaskDAO @Inject()(protected val dbConfigProvider: DatabaseConfigProvider) 
   } yield (Task)).groupBy(x=>x).map(_._1).list//http://stackoverflow.com/questions/18256768/select-distinct-in-scala-slick
   */
 
-  def all(): Future[Seq[Task]] = db.run(Tasks.result)
+  def all(): Future[Seq[Task]] = dbConfig.db.run(Tasks.result)
 
-  def insert(Task: Task): Future[Unit] = db.run(Tasks += Task).map { _ => () }
+  def insert(Task: Task): Future[Unit] = dbConfig.db.run(Tasks += Task).map { _ => () }
 
 
   private class TasksTable(tag: Tag) extends Table[Task](tag, "TASK") {
