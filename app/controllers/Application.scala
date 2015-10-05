@@ -1,13 +1,18 @@
 package controllers
 
-import play.api.mvc._
-import play.api.db.slick._
-import play.api.Play.current
-import models._
+import javax.inject.Inject
 
-object Application extends Controller {
+import play.api.libs.concurrent.Execution.Implicits.defaultContext
+import play.api.mvc.Action
+import play.api.mvc.Controller
+
+import models.{TaskDAO, ProjectDAO}
+
+class Application @Inject()(projectDAO: ProjectDAO, taskDAO: TaskDAO) extends Controller {
 
 
+
+  /*
   def addTaskToProject(taskName: String, projectId: Long) = Action { implicit rs =>
     DB.withSession{ implicit connection =>
     	val project = Projects.findById(projectId).get
@@ -20,7 +25,8 @@ object Application extends Controller {
       
       Ok("I have created " + task + " The project has now these tasks: " + tasksOfProject.mkString(", "))     
     }
-  }  
+  }
+
 
   def test1 = Action { implicit rs =>
     DB.withSession{ implicit connection =>
@@ -28,6 +34,11 @@ object Application extends Controller {
     	val data2 = Projects.findByName("xzy")
       Ok(data.toString)     
     }
-  }  
+  }
+  */
+
+  def test1 = Action.async { implicit rs =>
+    projectDAO.all().zip(taskDAO.all()).map {case (cats, dogs) => Ok("OK") }
+  }
     
 }
