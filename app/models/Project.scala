@@ -3,8 +3,6 @@ package models
 import scala.concurrent.Future
 import javax.inject.Inject
 import play.api.db.slick.DatabaseConfigProvider
-import play.api.db.slick.HasDatabaseConfigProvider
-import play.api.libs.concurrent.Execution.Implicits.defaultContext
 import slick.driver.JdbcProfile
 
 case class Project(id: Long, name: String)
@@ -16,8 +14,8 @@ class ProjectDAO @Inject()(protected val dbConfigProvider: DatabaseConfigProvide
 
   private val Projects = TableQuery[ProjectsTable]
 
-  def findById(id: Long): Future[Option[Project]] =
-    dbConfig.db.run(Projects.filter(_.id === id).result.headOption)
+  def findById(id: Long): Future[Project] =
+    dbConfig.db.run(Projects.filter(_.id === id).result.head)
 
   def findByName(name: String): Future[Option[Project]] =
     dbConfig.db.run(Projects.filter(_.name === name).result.headOption)
@@ -31,8 +29,8 @@ class ProjectDAO @Inject()(protected val dbConfigProvider: DatabaseConfigProvide
 
   def all(): Future[Seq[Project]] = dbConfig.db.run(Projects.result)
 
-  def insert(Project: Project): Future[Unit] = dbConfig.db.run(Projects += Project).map { _ => () }
-
+  def insert(Project: Project): Future[Long] =
+    dbConfig.db.run(Projects returning Projects.map(_.id) += Project)
 
   private class ProjectsTable(tag: Tag) extends Table[Project](tag, "PROJECT") {
 

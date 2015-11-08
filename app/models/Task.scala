@@ -3,8 +3,6 @@ package models
 import scala.concurrent.Future
 import javax.inject.Inject
 import play.api.db.slick.DatabaseConfigProvider
-import play.api.db.slick.HasDatabaseConfigProvider
-import play.api.libs.concurrent.Execution.Implicits.defaultContext
 import slick.driver.JdbcProfile
 
 case class Task(id: Long, color: String, project: Long)
@@ -16,11 +14,14 @@ class TaskDAO @Inject()(protected val dbConfigProvider: DatabaseConfigProvider) 
 
   private val Tasks = TableQuery[TasksTable]
 
-  def findById(id: Long): Future[Option[Task]] =
-    dbConfig.db.run(Tasks.filter(_.id === id).result.headOption)
+  def findById(id: Long): Future[Task] =
+    dbConfig.db.run(Tasks.filter(_.id === id).result.head)
 
   def findByColor(color: String): Future[Option[Task]] =
     dbConfig.db.run(Tasks.filter(_.color === color).result.headOption)
+
+  def findByProject(projectId: Long): Future[Seq[Task]] =
+    dbConfig.db.run(Tasks.filter(_.project === projectId).result)
 
   /*
   def count(implicit s: Session): Int =
@@ -35,7 +36,8 @@ class TaskDAO @Inject()(protected val dbConfigProvider: DatabaseConfigProvider) 
 
   def all(): Future[Seq[Task]] = dbConfig.db.run(Tasks.result)
 
-  def insert(Task: Task): Future[Unit] = dbConfig.db.run(Tasks += Task).map { _ => () }
+  def insert(Task: Task): Future[Long] =
+    dbConfig.db.run(Tasks returning Tasks.map(_.id) += Task)
 
 
   private class TasksTable(tag: Tag) extends Table[Task](tag, "TASK") {
