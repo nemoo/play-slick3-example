@@ -1,5 +1,7 @@
 
 
 GET    /add/:name/to/:projectId             controllers.Application.addTaskToProject(name: String, projectId: Long)
-GET    /create/:name                        controllers.Application.createProject(name: String)
+
+GET    /projects/create/:name               controllers.Application.createProject(name: String)
 GET    /projects/list                       controllers.Application.listProjects
+GET    /projects/:id                        controllers.Application.project(id: Long)

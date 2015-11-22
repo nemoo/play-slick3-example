@@ -9,28 +9,21 @@ case class Project(id: Long, name: String)
 
 class ProjectDAO @Inject()(protected val dbConfigProvider: DatabaseConfigProvider) {
   val dbConfig = dbConfigProvider.get[JdbcProfile]
-
   import dbConfig.driver.api._
-
   private val Projects = TableQuery[ProjectsTable]
 
-  def findById(id: Long): Future[Project] =
-    dbConfig.db.run(Projects.filter(_.id === id).result.head)
 
-  def findByName(name: String): Future[Option[Project]] =
-    dbConfig.db.run(Projects.filter(_.name === name).result.headOption)
+  def findById(id: Long): DBIO[Option[Project]] =
+    Projects.filter(_.id === id).result.headOption
 
-  /*
-  def findTasks(id: Long): List[Task] =
-    Tasks
-      .filter(_.project === id)
-      .list
-  */
+  def findByName(name: String): DBIO[Option[Project]] =
+    Projects.filter(_.name === name).result.headOption
 
-  def all(): Future[Seq[Project]] = dbConfig.db.run(Projects.result)
+  def all(): DBIO[Seq[Project]] =
+    Projects.result
 
-  def insert(Project: Project): Future[Long] =
-    dbConfig.db.run(Projects returning Projects.map(_.id) += Project)
+  def insert(Project: Project): DBIO[Long] =
+    Projects returning Projects.map(_.id) += Project
 
   private class ProjectsTable(tag: Tag) extends Table[Project](tag, "PROJECT") {
 
