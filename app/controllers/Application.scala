@@ -1,33 +1,53 @@
 package controllers
 
-import play.api.mvc._
-import play.api.db.slick._
-import play.api.Play.current
-import models._
+import javax.inject.Inject
+import play.api.db.slick.DatabaseConfigProvider
+import play.api.libs.concurrent.Execution.Implicits.defaultContext
+import play.api.mvc.Action
+import play.api.mvc.Controller
+import models.{Project, TaskDAO, ProjectDAO, Task}
+import slick.driver.JdbcProfile
 
-object Application extends Controller {
+
+class Application @Inject()(projectDAO: ProjectDAO, taskDAO: TaskDAO)
+                           (protected val dbConfigProvider: DatabaseConfigProvider)
+                           extends Controller {
+  val dbConfig = dbConfigProvider.get[JdbcProfile]
+  import dbConfig.driver.api._
 
 
-  def addTaskToProject(taskName: String, projectId: Long) = Action { implicit rs =>
-    DB.withSession{ implicit connection =>
-    	val project = Projects.findById(projectId).get
-    	
-      val newTaskId = Tasks insert Task(0,taskName,project.id)
-      
-      val task = Tasks.findById(newTaskId).get
-      
-      val tasksOfProject = Projects.findTasks(projectId)
-      
-      Ok("I have created " + task + " The project has now these tasks: " + tasksOfProject.mkString(", "))     
+  def addTaskToProject(color: String, projectId: Long) = Action.async { implicit rs =>
+
+    val query = (for {
+      Some(project) <-  projectDAO.findById(projectId)
+      id <- taskDAO.insert(Task(0, color, project.id))
+    }yield id).transactionally
+
+    dbConfig.db.run(query).map{ taskId =>
+      Ok("I have created a new task: " + taskId)
     }
-  }  
+  }
 
-  def test1 = Action { implicit rs =>
-    DB.withSession{ implicit connection =>
-    	val data = Tasks.findByColor("blue")
-    	val data2 = Projects.findByName("xzy")
-      Ok(data.toString)     
-    }
-  }  
+  def createProject(name: String)= Action.async { implicit rs =>
+    val project = Project(0, name)
+    dbConfig.db.run(projectDAO.insert(project))
+      .map(id => Ok(s"project $id created") )
+  }
+
+  def listProjects = Action.async { implicit rs =>
+    dbConfig.db.run(projectDAO.all)
+      .map(projects => Ok(s"Projects: ${projects.map(_.name).mkString(", ")}"))
+  }
+
+  def project(id: Long) = Action.async { implicit rs =>
+
+    val query = for {
+      Some(project) <-  projectDAO.findById(id)
+      tasks <- taskDAO.findByProjectId(id)
+    }yield (project, tasks)
+
+    dbConfig.db.run(query)
+      .map{case (project, tasks) => Ok(s"Project ${project.name} contains tasks: ${tasks.map(_.color).mkString(", ")}")}
+  }
     
 }
