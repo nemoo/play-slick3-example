@@ -8,6 +8,7 @@ import slick.driver.JdbcProfile
 case class Project(id: Long, name: String)
 
 class ProjectDAO @Inject()(protected val dbConfigProvider: DatabaseConfigProvider) {
+
   val dbConfig = dbConfigProvider.get[JdbcProfile]
   import dbConfig.driver.api._
   private val Projects = TableQuery[ProjectsTable]
@@ -19,8 +20,8 @@ class ProjectDAO @Inject()(protected val dbConfigProvider: DatabaseConfigProvide
   def findByName(name: String): DBIO[Option[Project]] =
     Projects.filter(_.name === name).result.headOption
 
-  def all(): DBIO[Seq[Project]] =
-    Projects.result
+  def all: DBIO[List[Project]] =
+    Projects.to[List].result
 
   def insert(Project: Project): DBIO[Long] =
     Projects returning Projects.map(_.id) += Project

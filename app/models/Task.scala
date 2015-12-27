@@ -18,8 +18,8 @@ class TaskDAO @Inject()(protected val dbConfigProvider: DatabaseConfigProvider) 
   def findByColor(color: String): DBIO[Option[Task]] =
     Tasks.filter(_.color === color).result.headOption
 
-  def findByProjectId(projectId: Long): DBIO[Seq[Task]] =
-    Tasks.filter(_.project === projectId).result
+  def findByProjectId(projectId: Long): DBIO[List[Task]] =
+    Tasks.filter(_.project === projectId).to[List].result
 
   def all(): DBIO[Seq[Task]] =
     Tasks.result

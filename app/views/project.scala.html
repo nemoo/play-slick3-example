@@ -1,0 +1,12 @@
+@(project: Project
+, tasks: List[Task])
+
+@main(project.name) {
+ Project: @project.name
+<br>
+ Tasks:
+	@tasks.map{task =>
+       @task.color
+        <br>
+	}
+}

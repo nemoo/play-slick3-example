@@ -7,9 +7,10 @@ import play.api.mvc.Action
 import play.api.mvc.Controller
 import models.{Project, TaskDAO, ProjectDAO, Task}
 import slick.driver.JdbcProfile
+import services.ProjectService
 
 
-class Application @Inject()(projectDAO: ProjectDAO, taskDAO: TaskDAO)
+class Application @Inject()(projectDAO: ProjectDAO, taskDAO: TaskDAO, projectService: ProjectService)
                            (protected val dbConfigProvider: DatabaseConfigProvider)
                            extends Controller {
   val dbConfig = dbConfigProvider.get[JdbcProfile]
@@ -17,37 +18,24 @@ class Application @Inject()(projectDAO: ProjectDAO, taskDAO: TaskDAO)
 
 
   def addTaskToProject(color: String, projectId: Long) = Action.async { implicit rs =>
-
-    val query = (for {
-      Some(project) <-  projectDAO.findById(projectId)
-      id <- taskDAO.insert(Task(0, color, project.id))
-    }yield id).transactionally
-
-    dbConfig.db.run(query).map{ taskId =>
-      Ok("I have created a new task: " + taskId)
-    }
+    projectService.addTaskToProject(color, projectId)
+      .map{ _ =>  Redirect(routes.Application.projects(projectId)) }
   }
 
   def createProject(name: String)= Action.async { implicit rs =>
-    val project = Project(0, name)
-    dbConfig.db.run(projectDAO.insert(project))
-      .map(id => Ok(s"project $id created") )
+     projectService.createProject(name)
+       .map(id => Ok(s"project $id created") )
   }
 
   def listProjects = Action.async { implicit rs =>
-    dbConfig.db.run(projectDAO.all)
-      .map(projects => Ok(s"Projects: ${projects.map(_.name).mkString(", ")}"))
+      projectService.all
+        .map(projects => Ok(views.html.projects(projects.toList)))
   }
 
-  def project(id: Long) = Action.async { implicit rs =>
-
-    val query = for {
-      Some(project) <-  projectDAO.findById(id)
-      tasks <- taskDAO.findByProjectId(id)
-    }yield (project, tasks)
-
-    dbConfig.db.run(query)
-      .map{case (project, tasks) => Ok(s"Project ${project.name} contains tasks: ${tasks.map(_.color).mkString(", ")}")}
+  def projects(id: Long) = Action.async { implicit rs =>
+    projectService.projectDetails(id)
+      .map{case (project, tasks) =>
+        Ok(views.html.project(project, tasks))}
   }
     
 }

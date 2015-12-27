@@ -1,7 +1,9 @@
 play-slick-example
 ==================
 
-A simple skeleton for play scala slick applications running in a docker container.
+A simple skeleton for play framework scala applications. Current targets: play 2.4 and slick 3.x.
+Features examples for multiple database interactions in one transaction.
+
 
 First, build the docker image. This will take the Dockerfile directly from github and use it to produce the docker image. 
 ```
