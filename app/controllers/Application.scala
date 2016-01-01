@@ -11,12 +11,12 @@ class Application @Inject()( projectService: ProjectService)
                            extends Controller {
 
   def addTaskToProject(color: String, projectId: Long) = Action.async { implicit rs =>
-    projectService.addTaskToProject(color, projectId)
+    projectService.addTask(color, projectId)
       .map{ _ =>  Redirect(routes.Application.projects(projectId)) }
   }
 
   def createProject(name: String)= Action.async { implicit rs =>
-     projectService.createProject(name)
+     projectService.create(name)
        .map(id => Ok(s"project $id created") )
   }
 

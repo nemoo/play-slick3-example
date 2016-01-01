@@ -1,13 +1,13 @@
 package models
 
-import scala.concurrent.Future
 import javax.inject.Inject
 import play.api.db.slick.DatabaseConfigProvider
 import slick.driver.JdbcProfile
+import scala.concurrent.ExecutionContext.Implicits.global
 
 case class Project(id: Long, name: String)
 
-class ProjectRepo @Inject()(protected val dbConfigProvider: DatabaseConfigProvider) {
+class ProjectRepo @Inject()(taskRepo: TaskRepo)(protected val dbConfigProvider: DatabaseConfigProvider) {
 
   val dbConfig = dbConfigProvider.get[JdbcProfile]
   import dbConfig.driver.api._
@@ -23,8 +23,20 @@ class ProjectRepo @Inject()(protected val dbConfigProvider: DatabaseConfigProvid
   def all: DBIO[List[Project]] =
     Projects.to[List].result
 
-  def insert(Project: Project): DBIO[Long] =
+  private def insert(Project: Project): DBIO[Long] =
     Projects returning Projects.map(_.id) += Project
+
+  def create(name: String): DBIO[Long] = {
+    val project = Project(0, name)
+    insert(project)
+  }
+
+  def addTask(color: String, projectId: Long): DBIO[Long] =
+    (for {
+      Some(project) <- findById(projectId)
+      id <- taskRepo.insert(Task(0, color, project.id))
+    }yield id).transactionally
+
 
   private class ProjectsTable(tag: Tag) extends Table[Project](tag, "PROJECT") {
 
