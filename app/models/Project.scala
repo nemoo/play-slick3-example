@@ -7,7 +7,7 @@ import slick.driver.JdbcProfile
 
 case class Project(id: Long, name: String)
 
-class ProjectDAO @Inject()(protected val dbConfigProvider: DatabaseConfigProvider) {
+class ProjectRepo @Inject()(protected val dbConfigProvider: DatabaseConfigProvider) {
 
   val dbConfig = dbConfigProvider.get[JdbcProfile]
   import dbConfig.driver.api._

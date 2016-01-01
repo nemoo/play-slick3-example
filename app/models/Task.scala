@@ -6,7 +6,7 @@ import slick.driver.JdbcProfile
 
 case class Task(id: Long, color: String, project: Long)
 
-class TaskDAO @Inject()(protected val dbConfigProvider: DatabaseConfigProvider) {
+class TaskRepo @Inject()(protected val dbConfigProvider: DatabaseConfigProvider) {
   val dbConfig = dbConfigProvider.get[JdbcProfile]
   import dbConfig.driver.api._
   private val Tasks = TableQuery[TasksTable]

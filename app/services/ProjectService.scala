@@ -8,7 +8,7 @@ import scala.concurrent.Future
 import play.api.libs.concurrent.Execution.Implicits.defaultContext
 
 
-class ProjectService @Inject()(projectDAO: ProjectDAO, taskDAO: TaskDAO)(protected val dbConfigProvider: DatabaseConfigProvider)
+class ProjectService @Inject()(projectDAO: ProjectRepo, taskDAO: TaskRepo)(protected val dbConfigProvider: DatabaseConfigProvider)
 {
   val dbConfig = dbConfigProvider.get[JdbcProfile]
   val db = dbConfig.db

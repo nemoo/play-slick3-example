@@ -28,7 +28,7 @@ class ModelSpec extends Specification {
 
 
   def projectDao(implicit app: Application) = {
-    val app2CompaniesDAO = Application.instanceCache[ProjectDAO]
+    val app2CompaniesDAO = Application.instanceCache[ProjectRepo]
     app2CompaniesDAO(app)
   }
 
