@@ -1,21 +1,14 @@
 package controllers
 
 import javax.inject.Inject
-import play.api.db.slick.DatabaseConfigProvider
 import play.api.libs.concurrent.Execution.Implicits.defaultContext
 import play.api.mvc.Action
 import play.api.mvc.Controller
-import models.{Project, TaskDAO, ProjectDAO, Task}
-import slick.driver.JdbcProfile
 import services.ProjectService
 
 
-class Application @Inject()(projectDAO: ProjectDAO, taskDAO: TaskDAO, projectService: ProjectService)
-                           (protected val dbConfigProvider: DatabaseConfigProvider)
+class Application @Inject()( projectService: ProjectService)
                            extends Controller {
-  val dbConfig = dbConfigProvider.get[JdbcProfile]
-  import dbConfig.driver.api._
-
 
   def addTaskToProject(color: String, projectId: Long) = Action.async { implicit rs =>
     projectService.addTaskToProject(color, projectId)
