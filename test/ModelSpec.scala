@@ -52,23 +52,6 @@ class ModelSpec extends Specification {
     }
 
 
-    "be inserted3" in {
-      running(appWithMemoryDatabase) {
-
-        val project = Project(1, "A")
-
-        val query = (for {
-          _ <- projectDao.insert(project)
-          project <- projectDao.all
-        }yield project).transactionally
-
-
-        val result = Await.result(dbConfig.db.run(query), Duration.Inf)
-
-        result must be_==(Seq(Project(1, "A")))
-      }
-    }
-
 
   }
 
