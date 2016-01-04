@@ -1,16 +1,21 @@
 package test
 
-import play.api.test._
 import play.api.test.Helpers._
+import play.api.test._
 import services.ProjectService
-import scala.concurrent.Await
-import scala.concurrent.duration.Duration
-import org.specs2.mutable._
-import scala.concurrent.ExecutionContext.Implicits.global
 import testhelpers.Injector
 
+import scala.concurrent.Await
+import scala.concurrent.ExecutionContext.Implicits.global
+import scala.concurrent.duration.Duration
 
-class ModelSpec extends Specification {
+import org.scalatest._
+import play.api.test._
+import play.api.test.Helpers._
+import org.scalatestplus.play._
+
+
+class ModelSpec2 extends PlaySpec with OneAppPerTest {
 
   import models._
 
@@ -26,7 +31,7 @@ class ModelSpec extends Specification {
 
         val result = Await.result(action, Duration.Inf)
 
-        result must be_==(List(Project(1, "A")))
+        result mustBe List(Project(1, "A"))
       }
     }
 
@@ -37,7 +42,7 @@ class ModelSpec extends Specification {
 
         val result = Await.result(action, Duration.Inf)
 
-        result must be_==(None)
+        result mustBe None
       }
     }
 
