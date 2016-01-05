@@ -6,3 +6,5 @@ A starter application with Play Framework 2.4 and Slick 3.1. Most templates stop
 * Controllers link results from the service layer to GUI templates. They know nothing about data access technology. 
 * Services handle the execution of slick database queries and retrieve data for views.
 * Repositories handle interactions with domain aggregates.
+
+Additional feature: Handling of Enums in Slick

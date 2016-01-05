@@ -2,11 +2,10 @@
 , tasks: List[Task])
 
 @main(project.name) {
- Project: @project.name
+ projectId: @project.id @project.name
 <br>
- Tasks:
 	@tasks.map{task =>
-       @task.color
+    taskId: @task.id color: @task.color; status: @task.status.toString
         <br>
 	}
 }

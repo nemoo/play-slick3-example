@@ -34,7 +34,7 @@ class ProjectRepo @Inject()(taskRepo: TaskRepo)(protected val dbConfigProvider: 
   def addTask(color: String, projectId: Long): DBIO[Long] =
     (for {
       Some(project) <- findById(projectId)
-      id <- taskRepo.insert(Task(0, color, project.id))
+      id <- taskRepo.insert(Task(0, color, TaskStatus.ready, project.id))
     }yield id).transactionally
 
 

@@ -4,7 +4,13 @@ import javax.inject.Inject
 import play.api.db.slick.DatabaseConfigProvider
 import slick.driver.JdbcProfile
 
-case class Task(id: Long, color: String, project: Long)
+case class Task(id: Long, color: String, status: TaskStatus.Value, project: Long)
+
+object TaskStatus extends Enumeration {
+  val ready = Value("ready")
+  val set = Value("set")
+  val go = Value("go")
+}
 
 class TaskRepo @Inject()(protected val dbConfigProvider: DatabaseConfigProvider) {
   val dbConfig = dbConfigProvider.get[JdbcProfile]
@@ -21,6 +27,9 @@ class TaskRepo @Inject()(protected val dbConfigProvider: DatabaseConfigProvider)
   def findByProjectId(projectId: Long): DBIO[List[Task]] =
     Tasks.filter(_.project === projectId).to[List].result
 
+  def findByReadyStatus: DBIO[List[Task]] =
+    Tasks.filter(_.status === TaskStatus.ready).to[List].result
+
   def all(): DBIO[Seq[Task]] =
     Tasks.result
 
@@ -32,10 +41,14 @@ class TaskRepo @Inject()(protected val dbConfigProvider: DatabaseConfigProvider)
 
     def id = column[Long]("ID", O.AutoInc, O.PrimaryKey)
     def color = column[String]("COLOR")
+    def status = column[TaskStatus.Value]("STATUS")
     def project = column[Long]("PROJECT")
 
-    def * = (id, color, project) <> (Task.tupled, Task.unapply _)
-    def ? = (id.?, color.?, project.?).shaped.<>({ r => import r._; _1.map(_ => Task.tupled((_1.get, _2.get, _3.get))) }, (_: Any) => throw new Exception("Inserting into ? Taskion not supported."))
-
+    def * = (id, color, status, project) <> (Task.tupled, Task.unapply _)
+    def ? = (id.?, color.?, status.?, project.?).shaped.<>({ r => import r._; _1.map(_ => Task.tupled((_1.get, _2.get, _3.get, _4.get))) }, (_: Any) => throw new Exception("Inserting into ? Taskion not supported."))
   }
+
+  implicit val taskStatusColumnType = MappedColumnType.base[TaskStatus.Value, String](
+    _.toString, string => TaskStatus.withName(string))
+
 }
