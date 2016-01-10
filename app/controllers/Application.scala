@@ -5,8 +5,6 @@ import models.{TaskRepo, ProjectRepo}
 import play.api.libs.concurrent.Execution.Implicits.defaultContext
 import play.api.mvc.Action
 import play.api.mvc.Controller
-import services.ProjectService
-
 
 class Application @Inject()( projectRepo: ProjectRepo, taskRepo: TaskRepo)
                            extends Controller {

@@ -2,7 +2,7 @@ package test
 
 import play.api.test._
 import play.api.test.Helpers._
-import services.ProjectService
+import models.ProjectRepo
 import scala.concurrent.Await
 import scala.concurrent.duration.Duration
 import org.specs2.mutable._
@@ -14,15 +14,15 @@ class ModelSpec extends Specification {
 
   import models._
 
-  val projectService = Injector.inject[ProjectService]
+  val projectRepo = Injector.inject[ProjectRepo]
 
   "An item " should {
 
     "be inserted during the first test case" in {
       running(FakeApplication()) {
 
-        val action = projectService.create("A")
-          .flatMap(_ => projectService.all)
+        val action = projectRepo.create("A")
+          .flatMap(_ => projectRepo.all)
 
         val result = Await.result(action, Duration.Inf)
 
@@ -33,7 +33,7 @@ class ModelSpec extends Specification {
     "and not exist in the second test case" in {
       running(FakeApplication()) {
 
-        val action = projectService.all
+        val action = projectRepo.all
 
         val result = Await.result(action, Duration.Inf)
 
