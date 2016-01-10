@@ -4,6 +4,8 @@ import javax.inject.Inject
 import play.api.db.slick.DatabaseConfigProvider
 import slick.driver.JdbcProfile
 
+import scala.concurrent.Future
+
 case class Task(id: Long, color: String, status: TaskStatus.Value, project: Long)
 
 object TaskStatus extends Enumeration {
@@ -14,18 +16,19 @@ object TaskStatus extends Enumeration {
 
 class TaskRepo @Inject()(protected val dbConfigProvider: DatabaseConfigProvider) {
   val dbConfig = dbConfigProvider.get[JdbcProfile]
+  val db = dbConfig.db
   import dbConfig.driver.api._
   private val Tasks = TableQuery[TasksTable]
 
 
-  def findById(id: Long): DBIO[Task] =
-    Tasks.filter(_.id === id).result.head
+  def findById(id: Long): Future[Task] =
+    db.run(Tasks.filter(_.id === id).result.head)
 
   def findByColor(color: String): DBIO[Option[Task]] =
     Tasks.filter(_.color === color).result.headOption
 
-  def findByProjectId(projectId: Long): DBIO[List[Task]] =
-    Tasks.filter(_.project === projectId).to[List].result
+  def findByProjectId(projectId: Long): Future[List[Task]] =
+    db.run(Tasks.filter(_.project === projectId).to[List].result)
 
   def findByReadyStatus: DBIO[List[Task]] =
     Tasks.filter(_.status === TaskStatus.ready).to[List].result
