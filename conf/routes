@@ -1,8 +1,10 @@
 
 
-GET    /add/:name/to/:projectId             controllers.Application.addTaskToProject(name: String, projectId: Long)
 
-GET    /                                    controllers.Application.listProjects
-GET    /projects/create/:name               controllers.Application.createProject(name: String)
-GET    /projects/list                       controllers.Application.listProjects
-GET    /projects/:id                        controllers.Application.projects(id: Long)
+GET     /                                    controllers.Application.listProjects
+PUT     /projects/:name                      controllers.Application.createProject(name: String)
+GET     /projects/list                       controllers.Application.listProjects
+GET     /projects/:id                        controllers.Application.projects(id: Long)
+PUT     /projects/:id/:name                  controllers.Application.addTaskToProject(name: String, id: Long)
+
+DELETE  /projects/:name                      controllers.Application.delete(name: String)
