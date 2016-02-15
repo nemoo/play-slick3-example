@@ -19,27 +19,21 @@ class ModelScalaTestSpec extends PlaySpec with OneAppPerTest with BeforeAndAfter
 
   "An item " should {
 
-    "be inserted during the first test case" in {
-      running(FakeApplication()) {
-
+    "be inserted during the first test case" in new WithApplication(FakeApplication()) {
         val action = projectRepo.create("A")
           .flatMap(_ => projectRepo.all)
 
         val result = Await.result(action, Duration.Inf)
 
         result mustBe List(Project(1, "A"))
-      }
     }
 
-    "and not exist in the second test case" in {
-      running(FakeApplication()) {
-
+    "and not exist in the second test case" in new WithApplication(FakeApplication()) {
         val action = projectRepo.all
 
         val result = Await.result(action, Duration.Inf)
 
         result mustBe List.empty
-      }
     }
 
 
