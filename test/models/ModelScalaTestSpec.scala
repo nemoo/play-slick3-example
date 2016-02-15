@@ -1,18 +1,21 @@
 package models
 
+import org.scalatest.BeforeAndAfterEach
 import org.scalatestplus.play._
 import play.api.test.Helpers._
 import play.api.test._
-import testhelpers.Injector
+import testhelpers.{EvolutionHelper, Injector}
 
 import scala.concurrent.Await
 import scala.concurrent.ExecutionContext.Implicits.global
 import scala.concurrent.duration.Duration
 
 
-class ModelScalaTestSpec extends PlaySpec with OneAppPerTest {
+class ModelScalaTestSpec extends PlaySpec with OneAppPerTest with BeforeAndAfterEach {
 
   val projectRepo = Injector.inject[ProjectRepo]
+
+  override def afterEach() = EvolutionHelper.clean()
 
   "An item " should {
 
@@ -35,7 +38,7 @@ class ModelScalaTestSpec extends PlaySpec with OneAppPerTest {
 
         val result = Await.result(action, Duration.Inf)
 
-        result mustBe None
+        result mustBe List.empty
       }
     }
 
