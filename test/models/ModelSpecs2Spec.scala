@@ -4,7 +4,7 @@ import org.specs2.specification.AfterEach
 import play.api.db.DBApi
 import play.api.db.evolutions.Evolutions
 import play.api.test._
-import testhelpers.Injector
+import testhelpers.{EvolutionHelper, Injector}
 
 import scala.concurrent.Await
 import scala.concurrent.ExecutionContext.Implicits.global
@@ -15,12 +15,7 @@ class ModelSpecs2Spec extends PlaySpecification with AfterEach {
 
   val projectRepo = Injector.inject[ProjectRepo]
 
-  override def after = {
-    val dbapi = Injector.inject[DBApi]
-    Evolutions.cleanupEvolutions(dbapi.database("default"))
-  }
-
-
+  override def after = EvolutionHelper.clean()
 
   "An item " should {
 
