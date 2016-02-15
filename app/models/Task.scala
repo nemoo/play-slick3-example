@@ -2,6 +2,7 @@ package models
 
 import javax.inject.Inject
 import play.api.db.slick.DatabaseConfigProvider
+import slick.dbio.Effect.Write
 import slick.driver.JdbcProfile
 
 import scala.concurrent.Future
@@ -39,6 +40,8 @@ class TaskRepo @Inject()(protected val dbConfigProvider: DatabaseConfigProvider)
   def insert(Task: Task): DBIO[Long] =
     Tasks returning Tasks.map(_.id) += Task
 
+  def _deleteAllInProject(projectId: Long): DBIO[Int] =
+    Tasks.filter(_.project === projectId).delete
 
   private class TasksTable(tag: Tag) extends Table[Task](tag, "TASK") {
 
@@ -47,7 +50,7 @@ class TaskRepo @Inject()(protected val dbConfigProvider: DatabaseConfigProvider)
     def status = column[TaskStatus.Value]("STATUS")
     def project = column[Long]("PROJECT")
 
-    def * = (id, color, status, project) <> (Task.tupled, Task.unapply _)
+    def * = (id, color, status, project) <> (Task.tupled, Task.unapply)
     def ? = (id.?, color.?, status.?, project.?).shaped.<>({ r => import r._; _1.map(_ => Task.tupled((_1.get, _2.get, _3.get, _4.get))) }, (_: Any) => throw new Exception("Inserting into ? Taskion not supported."))
   }
 

@@ -21,14 +21,18 @@ class Application @Inject()( projectRepo: ProjectRepo, taskRepo: TaskRepo)
 
   def listProjects = Action.async { implicit rs =>
     projectRepo.all
-      .map(projects => Ok(views.html.projects(projects.toList)))
+      .map(projects => Ok(views.html.projects(projects)))
   }
 
   def projects(id: Long) = Action.async { implicit rs =>
     for {
       Some(project) <-  projectRepo.findById(id)
       tasks <- taskRepo.findByProjectId(id)
-    }yield (Ok(views.html.project(project, tasks)))
+    } yield Ok(views.html.project(project, tasks))
+  }
+
+  def delete(name: String) = Action.async { implicit rs =>
+    projectRepo.delete(name).map(num => Ok(s"$num projects deleted"))
   }
     
 }
