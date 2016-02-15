@@ -1,7 +1,8 @@
 package models
 
-import org.specs2.mutable._
-import play.api.test.Helpers._
+import org.specs2.specification.AfterEach
+import play.api.db.DBApi
+import play.api.db.evolutions.Evolutions
 import play.api.test._
 import testhelpers.Injector
 
@@ -10,9 +11,16 @@ import scala.concurrent.ExecutionContext.Implicits.global
 import scala.concurrent.duration.Duration
 
 
-class ModelSpecs2Spec extends Specification {
+class ModelSpecs2Spec extends PlaySpecification with AfterEach {
 
   val projectRepo = Injector.inject[ProjectRepo]
+
+  override def after = {
+    val dbapi = Injector.inject[DBApi]
+    Evolutions.cleanupEvolutions(dbapi.database("default"))
+  }
+
+
 
   "An item " should {
 
@@ -35,7 +43,7 @@ class ModelSpecs2Spec extends Specification {
 
         val result = Await.result(action, Duration.Inf)
 
-        result must be_==(None)
+        result must be_==(List.empty)
       }
     }
 
