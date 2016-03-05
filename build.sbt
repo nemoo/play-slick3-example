@@ -11,8 +11,8 @@ routesGenerator := InjectedRoutesGenerator
 resolvers += "scalaz-bintray" at "https://dl.bintray.com/scalaz/releases"
 
 libraryDependencies ++= Seq(
-    "com.typesafe.play" %% "play-slick" % "1.1.1",
-    "com.typesafe.play" %% "play-slick-evolutions" % "1.1.1",
+    "com.typesafe.play" %% "play-slick" % "2.0.0",
+    "com.typesafe.play" %% "play-slick-evolutions" % "2.0.0",
     "com.h2database" % "h2" % "1.4.187",
     "org.scalatest" % "scalatest_2.11" % "2.2.6" % "test",
     "org.scalatestplus" %% "play" % "1.4.0" % "test",
