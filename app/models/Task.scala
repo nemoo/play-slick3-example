@@ -49,11 +49,12 @@ class TaskRepo @Inject()(protected val dbConfigProvider: DatabaseConfigProvider)
     import scala.concurrent.ExecutionContext.Implicits.global
 
     val query = Tasks.filter(_.id === id)
-    for {
-      task <- db.run(query.result.head)
-      result <- db.run(query.update(task.patch(color, status, project)))
-    } yield result
 
+    val update = query.result.head.flatMap {task =>
+      query.update(task.patch(color, status, project))
+    }
+
+    db.run(update)
   }
 
   def all(): DBIO[Seq[Task]] =
