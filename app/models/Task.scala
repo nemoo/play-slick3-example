@@ -1,13 +1,23 @@
 package models
 
 import javax.inject.Inject
+
 import play.api.db.slick.DatabaseConfigProvider
-import slick.dbio.Effect.Write
+
 import slick.driver.JdbcProfile
 
 import scala.concurrent.Future
 
-case class Task(id: Long, color: String, status: TaskStatus.Value, project: Long)
+
+
+case class Task(id: Long, color: String, status: TaskStatus.Value, project: Long) {
+
+  def patch(color: Option[String], status: Option[TaskStatus.Value], project: Option[Long]): Task =
+    this.copy(color = color.getOrElse(this.color),
+              status = status.getOrElse(this.status),
+              project = project.getOrElse(this.project))
+
+}
 
 object TaskStatus extends Enumeration {
   val ready = Value("ready")
@@ -33,6 +43,19 @@ class TaskRepo @Inject()(protected val dbConfigProvider: DatabaseConfigProvider)
 
   def findByReadyStatus: DBIO[List[Task]] =
     Tasks.filter(_.status === TaskStatus.ready).to[List].result
+
+
+  def partialUpdate(id: Long, color: Option[String], status: Option[TaskStatus.Value], project: Option[Long]): Future[Int] = {
+    import scala.concurrent.ExecutionContext.Implicits.global
+
+    val query = Tasks.filter(_.id === id)
+
+    val update = query.result.head.flatMap {task =>
+      query.update(task.patch(color, status, project))
+    }
+
+    db.run(update)
+  }
 
   def all(): DBIO[Seq[Task]] =
     Tasks.result
