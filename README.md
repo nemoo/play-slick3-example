@@ -16,3 +16,12 @@ Repositories handle interactions with domain aggregates. All public methods are 
 3. Run `activator ~run` for continuous recompilation of the server app.
 
 Done: [http://localhost:9000/](http://localhost:9000/)
+
+PS.:
+Slick should reintegrate the minimalistic blocking slick 2 api. 
+Why? Because it it easier to read and write.  
+I want to be able to use the asynchronous api when I need it. Still, following 
+[Haoyi's Principle of Least Power](http://www.lihaoyi.com/post/StrategicScalaStylePrincipleofLeastPower.html) 
+I want to use the blocking api when I want maximum simplicity. 
+If you think so too, please support this [slick issue 1564](https://github.com/slick/slick/issues/1564).
+ 
