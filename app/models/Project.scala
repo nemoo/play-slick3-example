@@ -14,50 +14,35 @@ class ProjectRepo @Inject()(taskRepo: TaskRepo)(protected val dbConfigProvider: 
 
   val dbConfig = dbConfigProvider.get[JdbcProfile]
   val db = dbConfig.db
-  import dbConfig.driver.api._
+  import com.github.takezoe.slick.blocking.BlockingH2Driver.blockingApi._
   private val Projects = TableQuery[ProjectsTable]
 
-  private def _findById(id: Long): DBIO[Option[Project]] =
-    Projects.filter(_.id === id).result.headOption
+  def findById(id: Long)(implicit session: Session): Option[Project] =
+    Projects.filter(_.id === id)
+      .firstOption
 
-  private def _findByName(name: String): Query[ProjectsTable, Project, List] =
-    Projects.filter(_.name === name).to[List]
+  def findByName(name: String)(implicit session: Session): List[Project] =
+    Projects.filter(_.name === name)
+      .list
 
-  def findById(id: Long): Future[Option[Project]] =
-    db.run(_findById(id))
+  def all(implicit session: Session): List[Project] =
+    Projects.list
 
-  def findByName(name: String): Future[List[Project]] =
-    db.run(_findByName(name).result)
-
-  def all: Future[List[Project]] =
-    db.run(Projects.to[List].result)
-
-  def create(name: String): Future[Long] = {
+  def create(name: String)(implicit session: Session): Long = {
     val project = Project(0, name)
-    db.run(Projects returning Projects.map(_.id) += project)
+    (Projects returning Projects.map(_.id)).insert(project)
   }
 
-  def delete(name: String): Future[Int] = {
-    val query = _findByName(name)
+  def delete(name: String)(implicit session: Session): Unit = {
+    val projects = findByName(name)
 
-    val interaction = for {
-      projects        <- query.result
-      _               <- DBIO.sequence(projects.map(p => taskRepo._deleteAllInProject(p.id)))
-      projectsDeleted <- query.delete
-    } yield projectsDeleted
-
-    db.run(interaction.transactionally)
+    projects.foreach(p => taskRepo._deleteAllInProject(p.id))
   }
 
-  def addTask(color: String, projectId: Long): Future[Long] = {
-    val interaction = for {
-      Some(project) <- _findById(projectId)
-      id <- taskRepo.insert(Task(0, color, TaskStatus.ready, project.id))
-    } yield id
-
-    db.run(interaction.transactionally)
+  def addTask(color: String, projectId: Long)(implicit session: Session): Long = {
+    val project = findById(projectId).get
+    taskRepo.insert(Task(0, color, TaskStatus.ready, project.id))
   }
-
 
   private class ProjectsTable(tag: Tag) extends Table[Project](tag, "PROJECT") {
 

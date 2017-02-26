@@ -9,7 +9,6 @@ import slick.driver.JdbcProfile
 import scala.concurrent.Future
 
 
-
 case class Task(id: Long, color: String, status: TaskStatus.Value, project: Long) {
 
   def patch(color: Option[String], status: Option[TaskStatus.Value], project: Option[Long]): Task =
@@ -28,42 +27,36 @@ object TaskStatus extends Enumeration {
 class TaskRepo @Inject()(protected val dbConfigProvider: DatabaseConfigProvider) {
   val dbConfig = dbConfigProvider.get[JdbcProfile]
   val db = dbConfig.db
-  import dbConfig.driver.api._
+  import com.github.takezoe.slick.blocking.BlockingH2Driver.blockingApi._
   private val Tasks = TableQuery[TasksTable]
 
 
-  def findById(id: Long): Future[Task] =
-    db.run(Tasks.filter(_.id === id).result.head)
+  def findById(id: Long)(implicit session: Session): Task =
+    Tasks.filter(_.id === id).first
 
-  def findByColor(color: String): DBIO[Option[Task]] =
-    Tasks.filter(_.color === color).result.headOption
+  def findByColor(color: String)(implicit session: Session): Option[Task] =
+    Tasks.filter(_.color === color).firstOption
 
-  def findByProjectId(projectId: Long): Future[List[Task]] =
-    db.run(Tasks.filter(_.project === projectId).to[List].result)
+  def findByProjectId(projectId: Long)(implicit session: Session): List[Task] =
+    Tasks.filter(_.project === projectId).list
 
-  def findByReadyStatus: DBIO[List[Task]] =
-    Tasks.filter(_.status === TaskStatus.ready).to[List].result
+  def findByReadyStatus(implicit session: Session): List[Task] =
+    Tasks.filter(_.status === TaskStatus.ready).list
 
 
-  def partialUpdate(id: Long, color: Option[String], status: Option[TaskStatus.Value], project: Option[Long]): Future[Int] = {
-    import scala.concurrent.ExecutionContext.Implicits.global
+  def partialUpdate(id: Long, color: Option[String], status: Option[TaskStatus.Value], project: Option[Long])(implicit session: Session): Int = {
 
-    val query = Tasks.filter(_.id === id)
-
-    val update = query.result.head.flatMap {task =>
-      query.update(task.patch(color, status, project))
-    }
-
-    db.run(update)
+    val task = findById(id)
+    Tasks.filter(_.id === id).update(task.patch(color, status, project))
   }
 
-  def all(): DBIO[Seq[Task]] =
-    Tasks.result
+  def all()(implicit session: Session): Seq[Task] =
+    Tasks.list
 
-  def insert(Task: Task): DBIO[Long] =
-    Tasks returning Tasks.map(_.id) += Task
+  def insert(task: Task)(implicit session: Session): Long =
+    (Tasks returning Tasks.map(_.id)).insert(task)
 
-  def _deleteAllInProject(projectId: Long): DBIO[Int] =
+  def _deleteAllInProject(projectId: Long)(implicit session: Session): Int =
     Tasks.filter(_.project === projectId).delete
 
   private class TasksTable(tag: Tag) extends Table[Task](tag, "TASK") {

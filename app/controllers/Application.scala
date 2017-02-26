@@ -5,38 +5,56 @@ import javax.inject.Inject
 import models.{ProjectRepo, TaskRepo}
 import play.api.libs.concurrent.Execution.Implicits.defaultContext
 import play.api.mvc.{Action, Controller}
+import com.github.takezoe.slick.blocking.BlockingH2Driver.blockingApi._
 
 class Application @Inject()( projectRepo: ProjectRepo, taskRepo: TaskRepo)
                            extends Controller {
 
-  def addTaskToProject(color: String, projectId: Long) = Action.async { implicit rs =>
-    projectRepo.addTask(color, projectId)
-      .map{ _ =>  Redirect(routes.Application.projects(projectId)) }
+  import projectRepo.db
+
+  def addTaskToProject(color: String, projectId: Long) = Action { implicit request =>
+    db.withSession { implicit session =>
+      projectRepo.addTask(color, projectId)
+      Redirect(routes.Application.projects(projectId))
+    }
   }
 
-  def modifyTask(taskId: Long, color: Option[String]) = Action.async { implicit rs =>
-    taskRepo.partialUpdate(taskId, color, None, None).map(i =>
-    Ok(s"Rows affected : $i"))
-  }
-  def createProject(name: String)= Action.async { implicit rs =>
-    projectRepo.create(name)
-      .map(id => Ok(s"project $id created") )
+  def modifyTask(taskId: Long, color: Option[String]) = Action { implicit request =>
+      db.withSession { implicit session =>
+
+        val updatedRows = taskRepo.partialUpdate(taskId, color, None, None)
+
+        Ok(s"Rows affected : $updatedRows")
+      }
   }
 
-  def listProjects = Action.async { implicit rs =>
-    projectRepo.all
-      .map(projects => Ok(views.html.projects(projects)))
+  def createProject(name: String)= Action { implicit request =>
+    db.withSession { implicit session =>
+      val id = projectRepo.create(name)
+      Ok(s"project $id created")
+    }
   }
 
-  def projects(id: Long) = Action.async { implicit rs =>
-    for {
-      Some(project) <-  projectRepo.findById(id)
-      tasks <- taskRepo.findByProjectId(id)
-    } yield Ok(views.html.project(project, tasks))
+  def listProjects = Action { implicit request =>
+    db.withSession { implicit session =>
+      val projects = projectRepo.all
+       Ok(views.html.projects(projects))
+    }
   }
 
-  def delete(name: String) = Action.async { implicit rs =>
-    projectRepo.delete(name).map(num => Ok(s"$num projects deleted"))
+  def projects(id: Long) = Action { implicit request =>
+    db.withSession { implicit session =>
+      val project =  projectRepo.findById(id).get
+      val tasks = taskRepo.findByProjectId(id)
+      Ok(views.html.project(project, tasks))
+    }
+  }
+
+  def delete(name: String) = Action { implicit request =>
+    db.withSession { implicit session =>
+      projectRepo.delete(name)
+      Ok(s"project $name deleted")
+    }
   }
 
 }
