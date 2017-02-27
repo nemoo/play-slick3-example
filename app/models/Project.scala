@@ -5,15 +5,12 @@ import play.api.db.slick.DatabaseConfigProvider
 import slick.dbio
 import slick.dbio.Effect.Read
 import slick.driver.JdbcProfile
-import scala.concurrent.ExecutionContext.Implicits.global
-import scala.concurrent.Future
+
 
 case class Project(id: Long, name: String)
 
 class ProjectRepo @Inject()(taskRepo: TaskRepo)(protected val dbConfigProvider: DatabaseConfigProvider) {
 
-  val dbConfig = dbConfigProvider.get[JdbcProfile]
-  val db = dbConfig.db
   import com.github.takezoe.slick.blocking.BlockingH2Driver.blockingApi._
   private val Projects = TableQuery[ProjectsTable]
 

@@ -6,11 +6,13 @@ import models.{ProjectRepo, TaskRepo}
 import play.api.libs.concurrent.Execution.Implicits.defaultContext
 import play.api.mvc.{Action, Controller}
 import com.github.takezoe.slick.blocking.BlockingH2Driver.blockingApi._
+import play.api.db.slick.DatabaseConfigProvider
+import slick.driver.JdbcProfile
 
-class Application @Inject()( projectRepo: ProjectRepo, taskRepo: TaskRepo)
+class Application @Inject()( projectRepo: ProjectRepo, taskRepo: TaskRepo)(protected val dbConfigProvider: DatabaseConfigProvider)
                            extends Controller {
 
-  import projectRepo.db
+  val db = dbConfigProvider.get[JdbcProfile].db
 
   def addTaskToProject(color: String, projectId: Long) = Action { implicit request =>
     db.withSession { implicit session =>

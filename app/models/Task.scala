@@ -1,12 +1,9 @@
 package models
 
 import javax.inject.Inject
-
 import play.api.db.slick.DatabaseConfigProvider
-
 import slick.driver.JdbcProfile
 
-import scala.concurrent.Future
 
 
 case class Task(id: Long, color: String, status: TaskStatus.Value, project: Long) {
@@ -25,8 +22,7 @@ object TaskStatus extends Enumeration {
 }
 
 class TaskRepo @Inject()(protected val dbConfigProvider: DatabaseConfigProvider) {
-  val dbConfig = dbConfigProvider.get[JdbcProfile]
-  val db = dbConfig.db
+
   import com.github.takezoe.slick.blocking.BlockingH2Driver.blockingApi._
   private val Tasks = TableQuery[TasksTable]
 
