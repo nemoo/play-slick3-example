@@ -15,7 +15,7 @@ class ProjectRepo @Inject()(taskRepo: TaskRepo)(protected val dbConfigProvider: 
   val dbConfig = dbConfigProvider.get[JdbcProfile]
   val db = dbConfig.db
   import dbConfig.driver.api._
-  private val Projects = TableQuery[ProjectsTable]
+  private[models] val Projects = TableQuery[ProjectsTable]
 
   private def _findById(id: Long): DBIO[Option[Project]] =
     Projects.filter(_.id === id).result.headOption
@@ -59,7 +59,7 @@ class ProjectRepo @Inject()(taskRepo: TaskRepo)(protected val dbConfigProvider: 
   }
 
 
-  private class ProjectsTable(tag: Tag) extends Table[Project](tag, "PROJECT") {
+  private[models] class ProjectsTable(tag: Tag) extends Table[Project](tag, "PROJECT") {
 
     def id = column[Long]("ID", O.AutoInc, O.PrimaryKey)
     def name = column[String]("NAME")

@@ -29,7 +29,7 @@ class TaskRepo @Inject()(protected val dbConfigProvider: DatabaseConfigProvider)
   val dbConfig = dbConfigProvider.get[JdbcProfile]
   val db = dbConfig.db
   import dbConfig.driver.api._
-  private val Tasks = TableQuery[TasksTable]
+  private[models] val Tasks = TableQuery[TasksTable]
 
 
   def findById(id: Long): Future[Task] =
@@ -66,7 +66,7 @@ class TaskRepo @Inject()(protected val dbConfigProvider: DatabaseConfigProvider)
   def _deleteAllInProject(projectId: Long): DBIO[Int] =
     Tasks.filter(_.project === projectId).delete
 
-  private class TasksTable(tag: Tag) extends Table[Task](tag, "TASK") {
+  private[models] class TasksTable(tag: Tag) extends Table[Task](tag, "TASK") {
 
     def id = column[Long]("ID", O.AutoInc, O.PrimaryKey)
     def color = column[String]("COLOR")
