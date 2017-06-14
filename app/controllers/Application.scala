@@ -6,8 +6,7 @@ import models.{ProjectRepo, TaskRepo}
 import play.api.libs.concurrent.Execution.Implicits.defaultContext
 import play.api.mvc.{Action, Controller}
 
-class Application @Inject()( projectRepo: ProjectRepo, taskRepo: TaskRepo)
-                           extends Controller {
+class Application @Inject()( projectRepo: ProjectRepo, taskRepo: TaskRepo) extends Controller {
 
   def addTaskToProject(color: String, projectId: Long) = Action.async { implicit rs =>
     projectRepo.addTask(color, projectId)
