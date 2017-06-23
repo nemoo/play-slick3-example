@@ -13,7 +13,7 @@ Repositories handle interactions with domain aggregates. All public methods are 
 
 
 1. Install [JDK 8](http://www.oracle.com/technetwork/java/javase/downloads/index.html).
-2. Install [Lightbend Activator](https://www.lightbend.com/activator/download)
-3. Run `activator ~run` for continuous recompilation of the server app.
+2. Install [SBT](http://www.scala-sbt.org/download.html)
+3. Run `sbt ~run` for continuous recompilation of the server app.
 
 Done: [http://localhost:9000/](http://localhost:9000/)
