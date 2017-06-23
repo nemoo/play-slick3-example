@@ -3,10 +3,11 @@ package controllers
 import javax.inject.Inject
 
 import models.{ProjectRepo, TaskRepo}
-import play.api.libs.concurrent.Execution.Implicits.defaultContext
-import play.api.mvc.{Action, Controller}
+import play.api.mvc._
 
-class Application @Inject()( projectRepo: ProjectRepo, taskRepo: TaskRepo) extends Controller {
+import scala.concurrent.ExecutionContext
+
+class Application @Inject()(implicit ec: ExecutionContext, projectRepo: ProjectRepo, taskRepo: TaskRepo, val controllerComponents: ControllerComponents) extends BaseController {
 
   def addTaskToProject(color: String, projectId: Long) = Action.async { implicit rs =>
     projectRepo.addTask(color, projectId)
