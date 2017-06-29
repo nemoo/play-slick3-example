@@ -1,7 +1,7 @@
-Play 2.5, Slick 3.1 
+Play 2.6, Slick 3.2 
 ==================
 
-An example app using Play Framework 2.5, Slick 3.1
+An example app using Play Framework 2.6, Slick 3.2
 
 For maximum simplicity of the code, this project uses the [blocking-slick api](https://github.com/takezoe/blocking-slick).     
 
@@ -17,7 +17,7 @@ Repositories handle interactions with domain aggregates. All public methods are 
 
 
 1. Install [JDK 8](http://www.oracle.com/technetwork/java/javase/downloads/index.html).
-2. Install [Lightbend Activator](https://www.lightbend.com/activator/download)
-3. Run `activator ~run` for continuous recompilation of the server app.
+2. Install SBT
+3. Run `sbt ~run` for continuous recompilation of the server app.
 
 Done: [http://localhost:9000/](http://localhost:9000/)
