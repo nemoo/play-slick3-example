@@ -9,6 +9,8 @@ scalaVersion := "2.12.2"
 routesGenerator := InjectedRoutesGenerator
 
 resolvers += "scalaz-bintray" at "https://dl.bintray.com/scalaz/releases"
+resolvers += "Sonatype OSS Snapshots" at "https://oss.sonatype.org/content/repositories/snapshots/"
+resolvers += Resolver.jcenterRepo
 
 libraryDependencies ++= Seq(
     "com.typesafe.play" %% "play-slick" % "3.0.0",
@@ -18,9 +20,11 @@ libraryDependencies ++= Seq(
     "org.scalatestplus.play" %% "scalatestplus-play" % "3.0.0" % "test",
     "com.github.takezoe" %% "blocking-slick-32" % "0.0.8",
     specs2 % Test,
-    guice
+    guice,
+    "com.mohiva" %% "play-silhouette" % "5.0.0-SNAPSHOT",
+    "com.mohiva" %% "play-silhouette-password-bcrypt" % "5.0.0-SNAPSHOT",
+    "com.mohiva" %% "play-silhouette-persistence" % "5.0.0-SNAPSHOT",
+    "com.mohiva" %% "play-silhouette-crypto-jca" % "5.0.0-SNAPSHOT"
 )
 
-resolvers += "Sonatype snapshots" at "http://oss.sonatype.org/content/repositories/snapshots/"
 
-fork in run := true

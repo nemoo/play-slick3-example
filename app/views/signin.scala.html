@@ -1,0 +1,17 @@
+@()
+<!DOCTYPE html>
+
+<html>
+    <head>
+        <title>Sign in</title>
+    </head>
+    <body>
+        <h1>Sign in</h1>
+
+        <form method="post" action="@routes.Auth.authenticate">
+            <input id="input-login"  name="login"  />
+            <input id="input-password" type="password"  name="password"  />
+            <button  type="submit">Sign In</button>
+         </form>
+    </body>
+</html>
