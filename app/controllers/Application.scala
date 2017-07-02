@@ -4,13 +4,13 @@ import javax.inject.Inject
 
 import models.{ProjectRepo, TaskRepo}
 import play.api.libs.concurrent.Execution.Implicits.defaultContext
-import play.api.mvc.{Action, Controller}
+import play.api.mvc.{Action, BaseController, Controller, ControllerComponents}
 import com.github.takezoe.slick.blocking.BlockingH2Driver.blockingApi._
 import play.api.db.slick.DatabaseConfigProvider
 import slick.driver.JdbcProfile
 
-class Application @Inject()( projectRepo: ProjectRepo, taskRepo: TaskRepo)(protected val dbConfigProvider: DatabaseConfigProvider)
-                           extends Controller {
+class Application @Inject()( projectRepo: ProjectRepo, taskRepo: TaskRepo, val controllerComponents: ControllerComponents)(protected val dbConfigProvider: DatabaseConfigProvider)
+                           extends BaseController {
 
   val db = dbConfigProvider.get[JdbcProfile].db
 
