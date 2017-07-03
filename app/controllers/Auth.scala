@@ -3,23 +3,23 @@ package controllers
 import javax.inject.Inject
 
 import com.mohiva.play.silhouette.api.Silhouette
+import com.mohiva.play.silhouette.api.actions.SecuredRequest
 import com.mohiva.play.silhouette.api.util.Credentials
-import models.{ProjectRepo, TaskRepo}
 import play.api.data.Form
-import play.api.db.slick.DatabaseConfigProvider
-import play.api.mvc.{Action, BaseController, Controller, ControllerComponents}
-import slick.driver.JdbcProfile
+import play.api.mvc._
 import play.api.data.Forms._
-import play.api.data._
 import utils.AuthEnv
+
+import scala.concurrent.ExecutionContext
 
 
 class Auth @Inject() (
   val controllerComponents: ControllerComponents,
-  silhouette: Silhouette[AuthEnv])
-  extends BaseController {
+  silhouette: Silhouette[AuthEnv])(
+  val ex: ExecutionContext)
+extends BaseController {
 
-  def signin = Action { implicit request =>
+  def signin = silhouette.UnsecuredAction { implicit request =>
     Ok(views.html.signin())
   }
 
@@ -28,11 +28,11 @@ class Auth @Inject() (
     "password" -> nonEmptyText
   )(Credentials.apply)(Credentials.unapply))
 
-  def authenticate = Action { implicit request =>
+  def authenticate = silhouette.UnsecuredAction { implicit request =>
     Redirect(controllers.routes.Application.listProjects())
   }
 
-  def signout = Action { implicit request =>
+  def signout = silhouette.SecuredAction { implicit request: SecuredRequest[AuthEnv, AnyContent] =>
     Redirect(controllers.routes.Auth.signin())
   }
 }
