@@ -19,7 +19,7 @@ class Auth @Inject() (
   val ex: ExecutionContext)
 extends BaseController {
 
-  def signin = silhouette.UnsecuredAction { implicit request =>
+  def signin = silhouette.UnsecuredAction { implicit request: Request[AnyContent] =>
     Ok(views.html.signin())
   }
 
@@ -28,8 +28,9 @@ extends BaseController {
     "password" -> nonEmptyText
   )(Credentials.apply)(Credentials.unapply))
 
-  def authenticate = silhouette.UnsecuredAction { implicit request =>
-    Redirect(controllers.routes.Application.listProjects())
+  def authenticate = silhouette.UnsecuredAction { implicit request: Request[AnyContent] =>
+//    Redirect(controllers.routes.Application.listProjects())
+    Ok("authenticate")
   }
 
   def signout = silhouette.SecuredAction { implicit request: SecuredRequest[AuthEnv, AnyContent] =>
