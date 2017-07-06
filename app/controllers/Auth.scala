@@ -2,16 +2,17 @@ package controllers
 
 import javax.inject.Inject
 
-import com.mohiva.play.silhouette.api.{LoginEvent, Silhouette}
+import com.mohiva.play.silhouette.api.{LoginEvent, LoginInfo, Silhouette}
 import com.mohiva.play.silhouette.api.actions.SecuredRequest
 import com.mohiva.play.silhouette.api.exceptions.ProviderException
 import com.mohiva.play.silhouette.api.util.Credentials
 import com.mohiva.play.silhouette.impl.exceptions.IdentityNotFoundException
 import com.mohiva.play.silhouette.impl.providers.CredentialsProvider
+import models.Account
 import play.api.data.Form
 import play.api.mvc._
 import play.api.data.Forms._
-import utils.{AuthEnv, UserService}
+import utils.{AuthEnv, AuthenticatorServiceImpl, UserService}
 
 import scala.concurrent.{ExecutionContext, Future}
 import scala.concurrent.ExecutionContext.Implicits.global
@@ -19,7 +20,7 @@ import scala.concurrent.ExecutionContext.Implicits.global
 
 class Auth @Inject() (
   val controllerComponents: ControllerComponents,
-  credentialsProvider: CredentialsProvider,
+  authenticator: AuthenticatorServiceImpl,
   userService: UserService,
   val silhouette: Silhouette[AuthEnv])(
   val ex: ExecutionContext)
@@ -42,7 +43,8 @@ extends BaseController {
         val Credentials(identifier, password) = formData
         val entryUri = request.session.get("ENTRY_URI")
         val targetUri: String = entryUri.getOrElse(routes.Application.listProjects.toString)
-        credentialsProvider.authenticate(Credentials(identifier, password)).flatMap { loginInfo =>
+        authenticator.authenticate(identifier, password).flatMap { case Account(user, role) =>
+          val loginInfo = LoginInfo(providerID = "sdfs", providerKey = user)
           userService.retrieve(loginInfo).flatMap {
             case Some(user) => for {
               authenticator <- silhouette.env.authenticatorService.create(loginInfo)

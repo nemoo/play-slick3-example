@@ -25,7 +25,7 @@ import com.mohiva.play.silhouette.api.repositories.AuthInfoRepository
 import com.mohiva.play.silhouette.api.services._
 import com.mohiva.play.silhouette.api.util._
 import com.mohiva.play.silhouette.api.{ Environment, EventBus, Silhouette, SilhouetteProvider }
-import com.mohiva.play.silhouette.crypto.{ JcaCrypter, JcaCrypterSettings, JcaSigner, JcaSignerSettings }
+import com.mohiva.play.silhouette.crypto.{  JcaSigner, JcaSignerSettings , JcaCrypter, JcaCrypterSettings}
 import com.mohiva.play.silhouette.impl.authenticators._
 import com.mohiva.play.silhouette.impl.providers._
 import com.mohiva.play.silhouette.impl.providers.oauth1._
@@ -45,6 +45,8 @@ import play.api.Configuration
 import play.api.libs.openid.OpenIdClient
 import play.api.libs.ws.WSClient
 import play.api.mvc.CookieHeaderEncoding
+import net.ceedubs.ficus.Ficus._
+import net.ceedubs.ficus.readers.ArbitraryTypeReader._
 
 
 
@@ -86,8 +88,8 @@ class SilhouetteModule extends AbstractModule with ScalaModule{
     */
   @Provides
   def provideAuthenticatorService(
-                                   @Named("authenticator-signer") signer: Signer,
-                                   @Named("authenticator-crypter") crypter: Crypter,
+                                   signer: JcaSigner,
+                                   crypter: JcaCrypter,
                                    cookieHeaderEncoding: CookieHeaderEncoding,
                                    fingerprintGenerator: FingerprintGenerator,
                                    idGenerator: IDGenerator,
@@ -102,15 +104,14 @@ class SilhouetteModule extends AbstractModule with ScalaModule{
 
 
   /**
-    * Provides the signer for the authenticator.
+    * Provides the cookie signer for the authenticator.
     *
     * @param configuration The Play configuration.
-    * @return The signer for the authenticator.
+    * @return The cookie signer for the authenticator.
     */
-  @Provides @Named("authenticator-signer")
-  def provideAuthenticatorSigner(configuration: Configuration): Signer = {
-    val config = JcaSignerSettings(key = "gdfgdg34")
-
+  @Provides
+  def provideAuthenticatorCookieSigner(configuration: Configuration): JcaSigner = {
+    val config = configuration.underlying.as[JcaSignerSettings]("silhouette.authenticator.cookie.signer")
     new JcaSigner(config)
   }
 
@@ -120,10 +121,9 @@ class SilhouetteModule extends AbstractModule with ScalaModule{
     * @param configuration The Play configuration.
     * @return The crypter for the authenticator.
     */
-  @Provides @Named("authenticator-crypter")
-  def provideAuthenticatorCrypter(configuration: Configuration): Crypter = {
-    val config = JcaCrypterSettings("niujhkkjh")
-
+  @Provides
+  def provideAuthenticatorCrypter(configuration: Configuration): JcaCrypter = {
+    val config = configuration.underlying.as[JcaCrypterSettings]("silhouette.authenticator.crypter")
     new JcaCrypter(config)
   }
 }
