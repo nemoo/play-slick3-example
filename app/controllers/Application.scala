@@ -3,8 +3,7 @@ package controllers
 import javax.inject.Inject
 
 import models.{ProjectRepo, TaskRepo}
-import play.api.mvc.{Action, BaseController, Controller, ControllerComponents}
-import play.api.mvc.{ AbstractController, AnyContent }
+import play.api.mvc._
 import com.github.takezoe.slick.blocking.BlockingH2Driver.blockingApi._
 import com.mohiva.play.silhouette
 import com.mohiva.play.silhouette.api.Silhouette
@@ -26,11 +25,9 @@ class Application @Inject()(
 
   val db = dbConfigProvider.get[JdbcProfile].db
 
-
-  def test = silhouette.SecuredAction { implicit request: SecuredRequest[AuthEnv, AnyContent] =>
-    Ok("oll korrekt")
+  def test = silhouette.UnsecuredAction { implicit request: Request[AnyContent] =>
+    Ok("test")
   }
-
 
   def addTaskToProject(color: String, projectId: Long) = silhouette.SecuredAction { implicit request: SecuredRequest[AuthEnv, AnyContent] =>
     db.withSession { implicit session =>

@@ -13,3 +13,6 @@ DELETE  /projects/:name                      controllers.Application.delete(name
 GET     /signin                              controllers.Auth.signin
 POST    /authenticate                        controllers.Auth.authenticate
 GET     /signout                             controllers.Auth.signout
+
+
+GET     /test                             controllers.Application.test
