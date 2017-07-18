@@ -45,16 +45,18 @@ extends BaseController {
         val entryUri = request.session.get("ENTRY_URI")
         val targetUri: String = entryUri.getOrElse(routes.Application.listProjects.toString)
         authenticator.authenticate(identifier, password).flatMap { case Account(user, role) =>
-          val loginInfo = LoginInfo(providerID = "sdfs", providerKey = user)
+          val loginInfo = LoginInfo(providerID = "????", providerKey = user)
           userService.retrieve(loginInfo).flatMap {
-            case Some(user) => for {
-              authenticator <- silhouette.env.authenticatorService.create(loginInfo)
-              cookie <- silhouette.env.authenticatorService.init(authenticator)
-              result <- silhouette.env.authenticatorService.embed(cookie, Redirect(targetUri).withSession(request.session - "ENTRY_URI"))
-            } yield {
-              silhouette.env.eventBus.publish(LoginEvent(user, request))
-              result
-            }
+            case Some(user) =>
+              println(s"found user $user")
+              for {
+                authenticator <- silhouette.env.authenticatorService.create(loginInfo)
+                cookie <- silhouette.env.authenticatorService.init(authenticator)
+                result <- silhouette.env.authenticatorService.embed(cookie, Redirect(targetUri).withSession(request.session - "ENTRY_URI"))
+              } yield {
+                silhouette.env.eventBus.publish(LoginEvent(user, request))
+                result
+              }
             case None => Future.failed(new IdentityNotFoundException("Couldn't find user"))
           }
         }.recover {
