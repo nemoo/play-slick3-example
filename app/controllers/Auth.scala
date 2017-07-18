@@ -38,7 +38,8 @@ extends BaseController {
   def authenticate = silhouette.UnsecuredAction.async { implicit request: Request[AnyContent] =>
 //    Redirect(controllers.routes.Application.listProjects())
     signInForm.bindFromRequest.fold(
-      formWithErrors => Future.successful(Redirect(controllers.routes.Auth.signin().toString)),
+      //      formWithErrors => Future.successful(Redirect(controllers.routes.Auth.signin().toString)),
+      formWithErrors => Future.successful(Ok("Error")),
       formData => {
         val Credentials(identifier, password) = formData
         val entryUri = request.session.get("ENTRY_URI")

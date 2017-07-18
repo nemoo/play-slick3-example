@@ -14,12 +14,14 @@ class ErrorHandler @Inject() extends  SecuredErrorHandler with UnsecuredErrorHan
 
   // 401 - Unauthorized
   override def onNotAuthenticated(implicit request: RequestHeader): Future[Result] = Future.successful {
+    println("notAuthenticated")
     Redirect(controllers.routes.Auth.signin()).withSession(request.session + ("ENTRY_URI" -> request.uri))
   }
 
   // 403 - Forbidden
   override def onNotAuthorized(implicit request: RequestHeader): Future[Result] = Future.successful {
 //    Forbidden(views.html.errors.accessDenied())
+    println("notAuthorized")
     Ok("You are not authorized to view this page")
   }
 

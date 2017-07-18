@@ -8,5 +8,10 @@ import scala.concurrent.Future
 
 @javax.inject.Singleton
 class UserService @javax.inject.Inject() (a:String) extends IdentityService[User]{
-  override def retrieve(loginInfo: LoginInfo): Future[Option[User]] = Future.successful(Option(User("john","1234")))
+  override def retrieve(loginInfo: LoginInfo): Future[Option[User]] ={
+    val user = User(loginInfo.providerKey)
+    println(s"retrieving user $user")
+    Future.successful(Option(user))
+  }
+
 }

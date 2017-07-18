@@ -12,5 +12,10 @@ trait AuthenticatorService {
 }
 
 class AuthenticatorServiceImpl @Inject() extends AuthenticatorService{
-  override def authenticate(user: String, password: String): Future[Account] = Future.successful(Account("gatesb", permission = Administrator))
+  override def authenticate(user: String, password: String): Future[Account] ={
+    val account = Account(user, permission = Administrator)
+    println(s"authenticated $account")
+    Future.successful(account)
+  }
+
 }
