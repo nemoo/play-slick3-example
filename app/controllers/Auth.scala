@@ -2,7 +2,7 @@ package controllers
 
 import javax.inject.Inject
 
-import com.mohiva.play.silhouette.api.{LoginEvent, LoginInfo, Silhouette}
+import com.mohiva.play.silhouette.api.{LoginEvent, LoginInfo, LogoutEvent, Silhouette}
 import com.mohiva.play.silhouette.api.actions.SecuredRequest
 import com.mohiva.play.silhouette.api.exceptions.ProviderException
 import com.mohiva.play.silhouette.api.util.Credentials
@@ -44,6 +44,7 @@ extends BaseController {
         val Credentials(identifier, password) = formData
         val entryUri = request.session.get("ENTRY_URI")
         val targetUri: String = entryUri.getOrElse(routes.Application.listProjects.toString)
+        println(s"targetUri: $targetUri")
         authenticator.authenticate(identifier, password).flatMap { case Account(user, role) =>
           val loginInfo = LoginInfo(providerID = "????", providerKey = user)
           userService.retrieve(loginInfo).flatMap {
@@ -66,7 +67,9 @@ extends BaseController {
     )
   }
 
-  def signout = silhouette.SecuredAction { implicit request: SecuredRequest[AuthEnv, AnyContent] =>
-    Redirect(controllers.routes.Auth.signin())
+  def signout = silhouette.SecuredAction.async { implicit request: SecuredRequest[AuthEnv, AnyContent] =>
+    val result = Redirect(routes.Auth.signin())
+    silhouette.env.eventBus.publish(LogoutEvent(request.identity, request))
+    silhouette.env.authenticatorService.discard(request.authenticator, result)
   }
 }
