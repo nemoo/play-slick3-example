@@ -1,10 +1,7 @@
 package utils
 
 import javax.inject.Inject
-
-import models.{Account, Administrator, NormalUser}
 import play.api.Logger
-
 import scala.concurrent.Future
 
 
