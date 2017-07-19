@@ -9,7 +9,7 @@ import models.{ProjectRepo, TaskRepo}
 import play.api.db.slick.DatabaseConfigProvider
 import play.api.mvc._
 import slick.jdbc.JdbcProfile
-import utils.AuthEnv
+import utils.{AdminOnly, AuthEnv}
 
 import scala.concurrent.ExecutionContext
 
@@ -24,7 +24,7 @@ class Admin @Inject()(
 
   val db = dbConfigProvider.get[JdbcProfile].db
 
-  def overview = silhouette.SecuredAction { implicit request: SecuredRequest[AuthEnv, AnyContent] =>
+  def overview = silhouette.SecuredAction(AdminOnly) { implicit request: SecuredRequest[AuthEnv, AnyContent] =>
     Ok(views.html.admin())
   }
 

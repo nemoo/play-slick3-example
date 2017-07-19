@@ -48,8 +48,8 @@ extends BaseController {
         val entryUri = request.session.get("ENTRY_URI")
         val targetUri: String = entryUri.getOrElse(routes.Application.listProjects.toString)
         logger.info(s"targetUri: $targetUri")
-        authenticator.authenticate(identifier, password).flatMap { case Account(user, role) =>
-          val loginInfo = LoginInfo(providerID = "????", providerKey = user)
+        authenticator.authenticate(identifier, password).flatMap { case _ =>
+          val loginInfo = LoginInfo(providerID = "????", providerKey = identifier)
           userService.retrieve(loginInfo).flatMap {
             case Some(user) =>
               logger.info(s"found user $user")

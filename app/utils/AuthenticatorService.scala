@@ -9,7 +9,7 @@ import scala.concurrent.Future
 
 
 trait AuthenticatorService {
-  def authenticate(user: String, password: String): Future[Account]
+  def authenticate(user: String, password: String): Future[Unit]
 }
 
 @javax.inject.Singleton
@@ -17,14 +17,10 @@ class AuthenticatorServiceImpl @Inject() extends AuthenticatorService{
 
   val logger = Logger(this.getClass())
 
-  override def authenticate(user: String, password: String): Future[Account] ={
-    val account = user match {
-      case "gatesb" => Account(user, permission = Administrator)
-      case _ => Account(user, permission = NormalUser)
-    }
+  override def authenticate(user: String, password: String): Future[Unit] ={
 
-    logger.info(s"authenticated $account")
-    Future.successful(account)
+    logger.info(s"authenticated $user")
+    Future.successful(Unit)
   }
 
 }
