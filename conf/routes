@@ -9,6 +9,7 @@ PUT     /projects/:id/:name                  controllers.Application.addTaskToPr
 PATCH   /tasks/:id                           controllers.Application.modifyTask(id: Long, color:Option[String] ?= None)
 DELETE  /projects/:name                      controllers.Application.delete(name: String)
 
+GET     /admin                               controllers.Admin.overview
 
 GET     /signin                              controllers.Auth.signin
 POST    /authenticate                        controllers.Auth.authenticate
