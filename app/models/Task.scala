@@ -27,32 +27,39 @@ class TaskRepo @Inject()(protected val dbConfigProvider: DatabaseConfigProvider)
 
 
   def findById(id: Long)(implicit session: Session): Task =
-    Tasks.filter(_.id === id).first
+    Tasks.filter(_.id === id)
+      .first
 
   def findByColor(color: String)(implicit session: Session): Option[Task] =
-    Tasks.filter(_.color === color).firstOption
+    Tasks.filter(_.color === color)
+      .firstOption
 
   def findByProjectId(projectId: Long)(implicit session: Session): List[Task] =
-    Tasks.filter(_.project === projectId).list
+    Tasks.filter(_.project === projectId)
+      .list
 
   def findByReadyStatus(implicit session: Session): List[Task] =
-    Tasks.filter(_.status === TaskStatus.ready).list
+    Tasks.filter(_.status === TaskStatus.ready)
+      .list
 
 
   def partialUpdate(id: Long, color: Option[String], status: Option[TaskStatus.Value], project: Option[Long])(implicit session: Session): Int = {
 
     val task = findById(id)
-    Tasks.filter(_.id === id).update(task.patch(color, status, project))
+    Tasks.filter(_.id === id)
+      .update(task.patch(color, status, project))
   }
 
   def all()(implicit session: Session): Seq[Task] =
     Tasks.list
 
   def insert(task: Task)(implicit session: Session): Long =
-    (Tasks returning Tasks.map(_.id)).insert(task)
+    (Tasks returning Tasks.map(_.id))
+      .insert(task)
 
   def _deleteAllInProject(projectId: Long)(implicit session: Session): Int =
-    Tasks.filter(_.project === projectId).delete
+    Tasks.filter(_.project === projectId)
+      .delete
 
   implicit val taskStatusColumnType = MappedColumnType.base[TaskStatus.Value, String](
     _.toString, string => TaskStatus.withName(string))

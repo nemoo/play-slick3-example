@@ -27,7 +27,8 @@ class ProjectRepo @Inject()(taskRepo: TaskRepo)(protected val dbConfigProvider: 
 
   def create(name: String)(implicit session: Session): Long = {
     val project = Project(0, name)
-    (Projects returning Projects.map(_.id)).insert(project)
+    (Projects returning Projects.map(_.id))
+      .insert(project)
   }
 
   def delete(name: String)(implicit session: Session): Unit = {
