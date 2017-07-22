@@ -2,7 +2,7 @@ package controllers
 
 import javax.inject.Inject
 
-import models.{ProjectRepo, TaskRepo}
+import models.{ProjectRepo, TaskRepo, User}
 import play.api.mvc._
 import com.github.takezoe.slick.blocking.BlockingH2Driver.blockingApi._
 import com.mohiva.play.silhouette
@@ -24,6 +24,16 @@ class Application @Inject()(
                            extends BaseController {
 
   val db = dbConfigProvider.get[JdbcProfile].db
+
+  db.withSession { implicit session =>
+    if (projectRepo.all.length + taskRepo.all.length == 0) {
+      val p1Id = projectRepo.create("Alpha")
+      projectRepo.addTask("blue", p1Id)
+      projectRepo.addTask("red", p1Id)
+      projectRepo.create("Beta")
+    }
+  }
+
 
   def test = silhouette.UnsecuredAction { implicit request: Request[AnyContent] =>
     Ok("test")
@@ -54,6 +64,8 @@ class Application @Inject()(
 
   def listProjects = silhouette.SecuredAction { implicit request: SecuredRequest[AuthEnv, AnyContent] =>
     db.withSession { implicit session =>
+      implicit val user = request.identity
+
       val projects = projectRepo.all
        Ok(views.html.projects(projects))
     }
@@ -61,6 +73,8 @@ class Application @Inject()(
 
   def projects(id: Long) = silhouette.SecuredAction { implicit request: SecuredRequest[AuthEnv, AnyContent] =>
     db.withSession { implicit session =>
+      implicit val user = request.identity
+
       val project =  projectRepo.findById(id).get
       val tasks = taskRepo.findByProjectId(id)
       Ok(views.html.project(project, tasks))

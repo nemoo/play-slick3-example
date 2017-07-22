@@ -1,8 +1,8 @@
 @(project: Project
-, tasks: List[Task])
+, tasks: List[Task])(implicit user: User)
 
 @main(project.name) {
- projectId: @project.id @project.name
+<h1>Project @project.name (id: @project.id) </h1>
 <br>
 	@tasks.map{task =>
     taskId: @task.id color: @task.color; status: @task.status.toString

@@ -1,7 +1,7 @@
-@(projects: List[Project])
+@(projects: List[Project])(implicit user: User)
 
 @main("Projects") {
- Projects:
+<h1>Projects</h1>
 	@projects.map{project =>
 		@project.name
 		<a href="@routes.Application.projects(project.id)">details</a>

@@ -2,7 +2,6 @@ package controllers
 
 import javax.inject.Inject
 
-import com.github.takezoe.slick.blocking.BlockingH2Driver.blockingApi._
 import com.mohiva.play.silhouette.api.Silhouette
 import com.mohiva.play.silhouette.api.actions._
 import models.{ProjectRepo, TaskRepo}
@@ -25,6 +24,8 @@ class Admin @Inject()(
   val db = dbConfigProvider.get[JdbcProfile].db
 
   def overview = silhouette.SecuredAction(AdminOnly) { implicit request: SecuredRequest[AuthEnv, AnyContent] =>
+    implicit val user = request.identity
+
     Ok(views.html.admin())
   }
 

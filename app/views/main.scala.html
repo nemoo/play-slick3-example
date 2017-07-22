@@ -1,4 +1,4 @@
-@(title: String)(content: Html)
+@(title: String)(content: Html)(implicit user: User)
 <!DOCTYPE html>
 
 <html>
@@ -7,6 +7,7 @@
     </head>
     <body>
         <header>
+            Hello, @user.login 
             <a href="@routes.Application.listProjects()">Home</a>
             <a href="@routes.Admin.overview()">Admin</a>
             <a href="@routes.Auth.signout()">Sign Out</a>

@@ -9,9 +9,8 @@ import scala.concurrent.Future
 
 object AdminOnly extends Authorization[User, CookieAuthenticator] {
   
-  def isAuthorized[B](user: User, authenticator: CookieAuthenticator)(
-    implicit request: Request[B]) = {
-    
+  def isAuthorized[B](user: User, authenticator: CookieAuthenticator)
+                     (implicit request: Request[B]) =
     Future.successful(user.permission == Administrator)
-  }
+
 }
