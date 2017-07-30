@@ -8,6 +8,7 @@ import com.github.takezoe.slick.blocking.BlockingH2Driver.blockingApi._
 import com.mohiva.play.silhouette
 import com.mohiva.play.silhouette.api.Silhouette
 import com.mohiva.play.silhouette.api.actions._
+import play.Environment
 import play.api.db.slick.DatabaseConfigProvider
 import slick.jdbc.JdbcProfile
 import utils.AuthEnv
@@ -18,15 +19,17 @@ class Application @Inject()(
                              projectRepo: ProjectRepo,
                              taskRepo: TaskRepo,
                              silhouette: Silhouette[AuthEnv],
-                             val controllerComponents: ControllerComponents
+                             val controllerComponents: ControllerComponents,
+                             env: Environment
                            )(protected val dbConfigProvider: DatabaseConfigProvider,
                              val ex: ExecutionContext )
                            extends BaseController {
 
   val db = dbConfigProvider.get[JdbcProfile].db
 
+  //generate some test data
   db.withSession { implicit session =>
-    if (projectRepo.all.length + taskRepo.all.length == 0) {
+    if (projectRepo.all.length + taskRepo.all.length == 0 && env.isDev) {
       val p1Id = projectRepo.create("Alpha")
       projectRepo.addTask("blue", p1Id)
       projectRepo.addTask("red", p1Id)
@@ -81,10 +84,10 @@ class Application @Inject()(
     }
   }
 
-  def delete(name: String) = silhouette.SecuredAction { implicit request: SecuredRequest[AuthEnv, AnyContent] =>
+  def delete(id: Long) = silhouette.SecuredAction { implicit request: SecuredRequest[AuthEnv, AnyContent] =>
     db.withTransaction { implicit session =>
-      projectRepo.delete(name)
-      Ok(s"project $name deleted")
+      projectRepo.delete(id)
+      Redirect(routes.Application.listProjects())
     }
   }
 

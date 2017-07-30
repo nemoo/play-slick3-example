@@ -31,12 +31,12 @@ class ProjectRepo @Inject()(taskRepo: TaskRepo)(protected val dbConfigProvider: 
       .insert(project)
   }
 
-  def delete(name: String)(implicit session: Session): Unit = {
-    val projects = findByName(name)
+  def delete(id: Long)(implicit session: Session): Unit = {
+    val projects = findById(id)
 
-    projects.foreach(p => taskRepo._deleteAllInProject(p.id))
+    projects.map(p => taskRepo._deleteAllInProject(p.id))
 
-    Projects.filter(_.name === name)
+    Projects.filter(_.id === id)
       .delete
   }
 

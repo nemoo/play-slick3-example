@@ -5,6 +5,7 @@
 	@projects.map{project =>
 		@project.name
 		<a href="@routes.Application.projects(project.id)">details</a>
+		<a href="@routes.Application.delete(project.id)">delete</a>
 		<br>
 	}
 }
