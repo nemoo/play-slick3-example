@@ -82,7 +82,7 @@ class Application @Inject()(
   }
 
   def delete(name: String) = silhouette.SecuredAction { implicit request: SecuredRequest[AuthEnv, AnyContent] =>
-    db.withSession { implicit session =>
+    db.withTransaction { implicit session =>
       projectRepo.delete(name)
       Ok(s"project $name deleted")
     }

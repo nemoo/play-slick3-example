@@ -35,6 +35,9 @@ class ProjectRepo @Inject()(taskRepo: TaskRepo)(protected val dbConfigProvider: 
     val projects = findByName(name)
 
     projects.foreach(p => taskRepo._deleteAllInProject(p.id))
+
+    Projects.filter(_.name === name)
+      .delete
   }
 
   def addTask(color: String, projectId: Long)(implicit session: Session): Long = {
