@@ -5,14 +5,12 @@ import play.api.db.slick.DatabaseConfigProvider
 import slick.dbio
 import slick.dbio.Effect.Read
 import slick.driver.JdbcProfile
+import com.github.takezoe.slick.blocking.BlockingH2Driver.blockingApi._
 
 
 case class Project(id: Long, name: String)
 
-class ProjectRepo @Inject()(taskRepo: TaskRepo)(protected val dbConfigProvider: DatabaseConfigProvider) {
-
-  import com.github.takezoe.slick.blocking.BlockingH2Driver.blockingApi._
-  private val Projects = TableQuery[ProjectsTable]
+class ProjectRepo @Inject()(taskRepo: TaskRepo)(protected val dbConfigProvider: DatabaseConfigProvider) extends DAO {
 
   def findById(id: Long)(implicit session: Session): Option[Project] =
     Projects.filter(_.id === id)
@@ -44,14 +42,13 @@ class ProjectRepo @Inject()(taskRepo: TaskRepo)(protected val dbConfigProvider: 
     val project = findById(projectId).get
     taskRepo.insert(Task(0, color, TaskStatus.ready, project.id))
   }
+}
 
-  private class ProjectsTable(tag: Tag) extends Table[Project](tag, "PROJECT") {
+class ProjectsTable(tag: Tag) extends Table[Project](tag, "PROJECT") {
 
-    def id = column[Long]("ID", O.AutoInc, O.PrimaryKey)
-    def name = column[String]("NAME")
+  def id = column[Long]("ID", O.AutoInc, O.PrimaryKey)
+  def name = column[String]("NAME")
 
-    def * = (id, name) <> (Project.tupled, Project.unapply)
-    def ? = (id.?, name.?).shaped.<>({ r => import r._; _1.map(_ => Project.tupled((_1.get, _2.get))) }, (_: Any) => throw new Exception("Inserting into ? projection not supported."))
-
-  }
+  def * = (id, name) <> (Project.tupled, Project.unapply)
+  def ? = (id.?, name.?).shaped.<>({ r => import r._; _1.map(_ => Project.tupled((_1.get, _2.get))) }, (_: Any) => throw new Exception("Inserting into ? projection not supported."))
 }

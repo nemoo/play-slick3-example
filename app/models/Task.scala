@@ -2,6 +2,8 @@ package models
 
 import javax.inject.Inject
 import play.api.db.slick.DatabaseConfigProvider
+import com.github.takezoe.slick.blocking.BlockingH2Driver.blockingApi._
+import Implicits._
 
 
 
@@ -20,11 +22,7 @@ object TaskStatus extends Enumeration {
   val go = Value("go")
 }
 
-class TaskRepo @Inject()(protected val dbConfigProvider: DatabaseConfigProvider) {
-
-  import com.github.takezoe.slick.blocking.BlockingH2Driver.blockingApi._
-  private val Tasks = TableQuery[TasksTable]
-
+class TaskRepo @Inject()(protected val dbConfigProvider: DatabaseConfigProvider) extends DAO{
 
   def findById(id: Long)(implicit session: Session): Task =
     Tasks.filter(_.id === id)
@@ -61,18 +59,16 @@ class TaskRepo @Inject()(protected val dbConfigProvider: DatabaseConfigProvider)
     Tasks.filter(_.project === projectId)
       .delete
 
-  implicit val taskStatusColumnType = MappedColumnType.base[TaskStatus.Value, String](
-    _.toString, string => TaskStatus.withName(string))
-
-  private class TasksTable(tag: Tag) extends Table[Task](tag, "TASK") {
-
-    def id = column[Long]("ID", O.AutoInc, O.PrimaryKey)
-    def color = column[String]("COLOR")
-    def status = column[TaskStatus.Value]("STATUS")
-    def project = column[Long]("PROJECT")
-
-    def * = (id, color, status, project) <> (Task.tupled, Task.unapply)
-    def ? = (id.?, color.?, status.?, project.?).shaped.<>({ r => import r._; _1.map(_ => Task.tupled((_1.get, _2.get, _3.get, _4.get))) }, (_: Any) => throw new Exception("Inserting into ? projection not supported."))
-  }
-
 }
+
+private class TasksTable(tag: Tag) extends Table[Task](tag, "TASK") {
+
+  def id = column[Long]("ID", O.AutoInc, O.PrimaryKey)
+  def color = column[String]("COLOR")
+  def status = column[TaskStatus.Value]("STATUS")
+  def project = column[Long]("PROJECT")
+
+  def * = (id, color, status, project) <> (Task.tupled, Task.unapply)
+  def ? = (id.?, color.?, status.?, project.?).shaped.<>({ r => import r._; _1.map(_ => Task.tupled((_1.get, _2.get, _3.get, _4.get))) }, (_: Any) => throw new Exception("Inserting into ? projection not supported."))
+}
+
