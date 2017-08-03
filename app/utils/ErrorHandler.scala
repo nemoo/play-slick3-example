@@ -1,31 +1,23 @@
 package utils
 
-import com.mohiva.play.silhouette.api.actions.{SecuredErrorHandler, UnsecuredErrorHandler}
+import play.api.http.HttpErrorHandler
 import play.api.mvc._
 import play.api.mvc.Results._
+import scala.concurrent._
+import javax.inject.Singleton;
 
-import scala.concurrent.Future
-import javax.inject.Inject
+@Singleton
+class ErrorHandler extends HttpErrorHandler {
 
-import play.api.Logger
-
-
-
-class ErrorHandler @Inject() extends  SecuredErrorHandler with UnsecuredErrorHandler {
-
-  val logger = Logger(this.getClass())
-  
-  // 401 - Unauthorized
-  override def onNotAuthenticated(implicit request: RequestHeader): Future[Result] = Future.successful {
-    logger.info("notAuthenticated")
-    Redirect(controllers.routes.Auth.signin()).withSession(request.session + ("ENTRY_URI" -> request.uri))
+  def onClientError(request: RequestHeader, statusCode: Int, message: String) = {
+    Future.successful(
+      Status(statusCode)("A client error occurred: " + message)
+    )
   }
 
-  // 403 - Forbidden
-  override def onNotAuthorized(implicit request: RequestHeader): Future[Result] = Future.successful {
-//    Forbidden(views.html.errors.accessDenied())
-    logger.info("notAuthorized")
-    Ok("You are not authorized to view this page")
+  def onServerError(request: RequestHeader, exception: Throwable) = {
+    Future.successful(
+      InternalServerError("A server error occurred: " + exception.getMessage)
+    )
   }
-
 }

@@ -17,7 +17,7 @@ import net.ceedubs.ficus.readers.ArbitraryTypeReader._
 import net.codingwell.scalaguice.ScalaModule
 import play.api.Configuration
 import play.api.mvc.CookieHeaderEncoding
-import utils.{AuthEnv, ErrorHandler, UserService}
+import utils.{AuthEnv, SecurityErrorHandler, UserService}
 
 import scala.concurrent.ExecutionContext.Implicits.global
 
@@ -26,8 +26,8 @@ import scala.concurrent.ExecutionContext.Implicits.global
 class SilhouetteModule extends AbstractModule with ScalaModule{
   override def configure(): Unit = {
     bind[Silhouette[AuthEnv]].to[SilhouetteProvider[AuthEnv]]
-    bind[SecuredErrorHandler].to[ErrorHandler]
-    bind[UnsecuredErrorHandler].to[ErrorHandler]
+    bind[SecuredErrorHandler].to[SecurityErrorHandler]
+    bind[UnsecuredErrorHandler].to[SecurityErrorHandler]
     bind[IdentityService[User]].to[UserService]
     bind[IDGenerator].toInstance(new SecureRandomIDGenerator())
     bind[PasswordHasher].toInstance(new BCryptPasswordHasher())
