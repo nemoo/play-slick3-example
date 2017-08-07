@@ -2,7 +2,7 @@ package controllers
 
 import javax.inject.Inject
 
-import models.{ProjectRepo, TaskRepo, User}
+import models.{ProjectRepo, TaskRepo, TestData, User}
 import play.api.mvc._
 import com.github.takezoe.slick.blocking.BlockingH2Driver.blockingApi._
 import com.mohiva.play.silhouette
@@ -18,6 +18,7 @@ import scala.concurrent.{ExecutionContext, Future}
 class Application @Inject()(
                              projectRepo: ProjectRepo,
                              taskRepo: TaskRepo,
+                             testData: TestData,
                              silhouette: Silhouette[AuthEnv],
                              val controllerComponents: ControllerComponents,
                              env: Environment
@@ -30,10 +31,7 @@ class Application @Inject()(
   //generate some test data
   db.withSession { implicit session =>
     if (projectRepo.all.length + taskRepo.all.length == 0 && env.isDev) {
-      val p1Id = projectRepo.create("Alpha")
-      projectRepo.addTask("blue", p1Id)
-      projectRepo.addTask("red", p1Id)
-      projectRepo.create("Beta")
+      testData.createTestData
     }
   }
 
