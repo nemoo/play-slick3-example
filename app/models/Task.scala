@@ -1,9 +1,12 @@
 package models
 
-import javax.inject.Inject
+import javax.inject.{Inject, Singleton}
+
 import play.api.db.slick.DatabaseConfigProvider
 import com.github.takezoe.slick.blocking.BlockingH2Driver.blockingApi._
 import Implicits._
+import slick.dbio.Effect
+import slick.sql.FixedSqlAction
 
 
 
@@ -22,6 +25,7 @@ object TaskStatus extends Enumeration {
   val go = Value("go")
 }
 
+@Singleton
 class TaskRepo @Inject()(protected val dbConfigProvider: DatabaseConfigProvider) extends DAO{
 
   def findById(id: Long)(implicit session: Session): Task =
@@ -54,6 +58,10 @@ class TaskRepo @Inject()(protected val dbConfigProvider: DatabaseConfigProvider)
   def insert(task: Task)(implicit session: Session): Long =
     (Tasks returning Tasks.map(_.id))
       .insert(task)
+
+  def insertOrUpdate(task: Task)(implicit session: Session): Unit =
+    (Tasks returning Tasks.map(_.id))
+      .insertOrUpdate(task)
 
   def _deleteAllInProject(projectId: Long)(implicit session: Session): Int =
     Tasks.filter(_.project === projectId)

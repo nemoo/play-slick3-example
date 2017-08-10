@@ -62,7 +62,7 @@ extends BaseController {
             case None => Future.failed(new IdentityNotFoundException("Couldn't find user"))
           }
         }.recover {
-          case e: ProviderException => Redirect(routes.Auth.signin)
+          case _ => Redirect(routes.Auth.signin)
         }
       }
     )

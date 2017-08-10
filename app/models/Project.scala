@@ -1,6 +1,7 @@
 package models
 
-import javax.inject.Inject
+import javax.inject.{Inject, Singleton}
+
 import play.api.db.slick.DatabaseConfigProvider
 import slick.dbio
 import slick.dbio.Effect.Read
@@ -10,6 +11,7 @@ import com.github.takezoe.slick.blocking.BlockingH2Driver.blockingApi._
 
 case class Project(id: Long, name: String)
 
+@Singleton
 class ProjectRepo @Inject()(taskRepo: TaskRepo)(protected val dbConfigProvider: DatabaseConfigProvider) extends DAO {
 
   def findById(id: Long)(implicit session: Session): Option[Project] =

@@ -1,6 +1,6 @@
 package controllers
 
-import javax.inject.Inject
+import javax.inject.{Inject, Singleton}
 
 import models.{ProjectRepo, TaskRepo, TestData, User}
 import play.api.mvc._
@@ -15,6 +15,7 @@ import utils.AuthEnv
 
 import scala.concurrent.{ExecutionContext, Future}
 
+@Singleton
 class Application @Inject()(
                              projectRepo: ProjectRepo,
                              taskRepo: TaskRepo,
