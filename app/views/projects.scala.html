@@ -1,4 +1,4 @@
-@(projects: List[Project])(implicit user: User)
+@(projects: List[Project], temperature: Long)(implicit user: User)
 
 @main("Projects") {
 <h1>Projects</h1>
@@ -8,4 +8,7 @@
 		<a href="@routes.Application.delete(project.id)">delete</a>
 		<br>
 	}
+	<p>
+		The temperature today is @temperature
+	</p>
 }

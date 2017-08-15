@@ -11,7 +11,7 @@ import com.mohiva.play.silhouette.api.actions._
 import play.Environment
 import play.api.db.slick.DatabaseConfigProvider
 import slick.jdbc.JdbcProfile
-import utils.AuthEnv
+import utils.{AuthEnv, WeatherService}
 
 import scala.concurrent.{ExecutionContext, Future}
 
@@ -20,6 +20,7 @@ class Application @Inject()(
                              projectRepo: ProjectRepo,
                              taskRepo: TaskRepo,
                              testData: TestData,
+                             weather: WeatherService,
                              silhouette: Silhouette[AuthEnv],
                              val controllerComponents: ControllerComponents,
                              env: Environment
@@ -68,8 +69,9 @@ class Application @Inject()(
     db.withSession { implicit session =>
       implicit val user = request.identity
 
+      val temperature = weather.forecast("NYC")
       val projects = projectRepo.all
-       Ok(views.html.projects(projects))
+       Ok(views.html.projects(projects, temperature))
     }
   }
 
