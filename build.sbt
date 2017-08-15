@@ -21,10 +21,10 @@ libraryDependencies ++= Seq(
     "com.github.takezoe" %% "blocking-slick-32" % "0.0.8",
     specs2 % Test,
     guice,
-    "com.mohiva" %% "play-silhouette" % "5.0.0-RC2",
-    "com.mohiva" %% "play-silhouette-password-bcrypt" % "5.0.0-RC2",
-    "com.mohiva" %% "play-silhouette-persistence" % "5.0.0-RC2",
-    "com.mohiva" %% "play-silhouette-crypto-jca" % "5.0.0-RC2",
+    "com.mohiva" %% "play-silhouette" % "5.0.0",
+    "com.mohiva" %% "play-silhouette-password-bcrypt" % "5.0.0",
+    "com.mohiva" %% "play-silhouette-persistence" % "5.0.0",
+    "com.mohiva" %% "play-silhouette-crypto-jca" % "5.0.0",
     "net.codingwell" %% "scala-guice" % "4.1.0",
     "com.iheart" %% "ficus" % "1.4.1"
 )
