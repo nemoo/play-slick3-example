@@ -21,6 +21,7 @@ libraryDependencies ++= Seq(
     "com.github.takezoe" %% "blocking-slick-32" % "0.0.8",
     specs2 % Test,
     guice,
+    ehcache,
     "com.mohiva" %% "play-silhouette" % "5.0.0",
     "com.mohiva" %% "play-silhouette-password-bcrypt" % "5.0.0",
     "com.mohiva" %% "play-silhouette-persistence" % "5.0.0",

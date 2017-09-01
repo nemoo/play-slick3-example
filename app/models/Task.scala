@@ -5,6 +5,7 @@ import javax.inject.{Inject, Singleton}
 import play.api.db.slick.DatabaseConfigProvider
 import com.github.takezoe.slick.blocking.BlockingH2Driver.blockingApi._
 import Implicits._
+import play.api.cache.AsyncCacheApi
 import slick.dbio.Effect
 import slick.sql.FixedSqlAction
 
@@ -26,7 +27,8 @@ object TaskStatus extends Enumeration {
 }
 
 @Singleton
-class TaskRepo @Inject()(protected val dbConfigProvider: DatabaseConfigProvider) extends DAO{
+class TaskRepo @Inject()(cache: AsyncCacheApi)
+                        (protected val dbConfigProvider: DatabaseConfigProvider) extends DAO{
 
   def findById(id: Long)(implicit session: Session): Task =
     Tasks.filter(_.id === id)
