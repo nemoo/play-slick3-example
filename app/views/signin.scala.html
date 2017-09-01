@@ -1,5 +1,4 @@
-@()(implicit request: RequestHeader)
-@import views.html.helper.CSRF
+@()
 <!DOCTYPE html>
 
 <html>
@@ -10,7 +9,6 @@
         <h1>Sign in</h1>
 
         <form method="post" action="@routes.Auth.authenticate">
-            @CSRF.formField(request)
             <input id="input-login"  name="login" value="gatesb" />
             <input id="input-password" type="password"  name="password" value="12345"  />
             <button  type="submit">Sign In</button>
