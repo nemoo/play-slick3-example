@@ -16,7 +16,7 @@ class WeatherServiceImpl @Inject() extends WeatherService{
   override def forecast(city: String): Long ={
 
     val fahrenheit = 55
-    logger.info(s"real temperature: $fahrenheit")
+    logger.debug(s"real temperature: $fahrenheit")
     fahrenheit
   }
 }
@@ -29,7 +29,7 @@ class WeatherServiceMock @Inject() extends WeatherService{
   override def forecast(city: String): Long ={
 
     val fahrenheit = 80
-    logger.info(s"mocked temperature: $fahrenheit")
+    logger.debug(s"mocked temperature: $fahrenheit")
     fahrenheit
   }
 }

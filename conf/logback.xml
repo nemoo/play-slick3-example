@@ -17,9 +17,9 @@
     </appender>
 
     <logger name="play" level="INFO" />
-    <logger name="application" level="DEBUG" />
-
-    <logger name="slick.jdbc.JdbcBackend.statement"  level="DEBUG" /> <!-- Will log all statements -->
+    <logger name="application" level="INFO" />
+    <logger name="slick.jdbc.JdbcBackend.statement"  level="INFO" /> <!-- Will log all statements -->
+    <logger name="com.zaxxer.hikari" level="ERROR"/>
 
     <root level="INFO">
         <appender-ref ref="ASYNCSTDOUT" />

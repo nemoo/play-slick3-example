@@ -18,7 +18,7 @@ class UserService @javax.inject.Inject() (a:String) extends IdentityService[User
       case x => User(x, permission = NormalUser)
     }
 
-    logger.info(s"retrieving user $user")
+    logger.debug(s"retrieving user $user")
     Future.successful(Option(user))
   }
 
