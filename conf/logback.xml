@@ -16,6 +16,12 @@
         <appender-ref ref="STDOUT" />
     </appender>
 
+    <appender name="CENTRAL" class="utils.logging.GelfAppender">
+        <encoder>
+            <pattern>[%level] %date %message%n%xException</pattern>
+        </encoder>
+    </appender>
+
     <logger name="play" level="INFO" />
     <logger name="application" level="INFO" />
     <logger name="slick.jdbc.JdbcBackend.statement"  level="INFO" /> <!-- Will log all statements -->
@@ -23,6 +29,7 @@
 
     <root level="INFO">
         <appender-ref ref="ASYNCSTDOUT" />
+        <appender-ref ref="CENTRAL" />
     </root>
 
 </configuration>

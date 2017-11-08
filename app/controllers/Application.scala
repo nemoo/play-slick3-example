@@ -9,6 +9,7 @@ import com.mohiva.play.silhouette
 import com.mohiva.play.silhouette.api.Silhouette
 import com.mohiva.play.silhouette.api.actions._
 import play.Environment
+import play.api.Logger
 import play.api.db.slick.DatabaseConfigProvider
 import slick.jdbc.JdbcProfile
 import utils.{AuthEnv, WeatherService}
@@ -29,6 +30,8 @@ class Application @Inject()(
                            extends BaseController {
 
   val db = dbConfigProvider.get[JdbcProfile].db
+
+  val logger = Logger(this.getClass())
 
   //generate some test data
   db.withSession { implicit session =>
@@ -68,6 +71,7 @@ class Application @Inject()(
   def listProjects = silhouette.SecuredAction { implicit request: SecuredRequest[AuthEnv, AnyContent] =>
     db.withSession { implicit session =>
       implicit val user = request.identity
+      logger.info("Listing projects...")
 
       val temperature = weather.forecast("NYC")
       val projects = projectRepo.all
