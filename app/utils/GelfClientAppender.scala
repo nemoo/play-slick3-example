@@ -9,34 +9,7 @@ import org.graylog2.gelfclient._
 import org.graylog2.gelfclient.transport.GelfTransport
 
 @Inject
-class GelfClientAppender extends AppenderBase[ILoggingEvent]{
-
-  val hostname = "example.com"
-  val port = 12
-  val gelfConfiguration = new GelfConfiguration(hostname, port)
-    .transport(GelfTransports.UDP)
-    .reconnectDelay(500)
-    .queueSize(512)
-    .connectTimeout(1000)
-    .tcpNoDelay(false)
-    .sendBufferSize(0) // causes the socket default to be used
-
-  private val transport: GelfTransport = GelfTransports.create(gelfConfiguration)
-
-
-
-//  val lc: LoggerContext = LoggerFactory.getILoggerFactory.asInstanceOf[LoggerContext]
-//  val rootLogger: Logger = lc.getLogger(Logger.ROOT_LOGGER_NAME)
-//
-//  gelfClientAppender = new GelfClientAppender(transport, canonicalHostName)
-//
-//  gelfClientAppender.setContext(lc)
-//
-//  gelfClientAppender.start
-//
-//  rootLogger.addAppender(gelfClientAppender)
-
-
+class GelfClientAppender(transport: GelfTransport, hostname: String) extends AppenderBase[ILoggingEvent]{
 
 
   override def append(eventObject: ILoggingEvent) = append(convertToGelfMessage(eventObject))
@@ -56,6 +29,9 @@ class GelfClientAppender extends AppenderBase[ILoggingEvent]{
       .level(toGelfMessageLevel(event.getLevel))
       .additionalField("threadname", event.getThreadName)
       .additionalField("logger", event.getLoggerName)
+      .additionalField("environment", "local")
+      .additionalField("instance", "playslick3example")
+      .additionalField("node", "fakenode")
       .build
   }
 

@@ -3,13 +3,16 @@ package utils
 import java.io.File
 import java.net.URL
 
-import ch.qos.logback.classic._
+import ch.qos.logback.classic.{Logger, _}
 import ch.qos.logback.classic.joran._
 import ch.qos.logback.classic.jul.LevelChangePropagator
 import ch.qos.logback.core.util._
+import org.graylog2.gelfclient.transport.GelfTransport
+import org.graylog2.gelfclient.{GelfConfiguration, GelfTransports}
 import org.slf4j.ILoggerFactory
 import org.slf4j.bridge._
 import org.slf4j.impl.StaticLoggerBinder
+import play.api
 import play.api._
 
 /**
@@ -85,6 +88,8 @@ class LogbackGraylogLoggerConfigurator extends LoggerConfigurator {
       val configurator = new JoranConfigurator
       configurator.setContext(ctx)
 
+      initialyzeGraylog(ctx)
+
       // Set a level change propagator to minimize the overhead of JUL
       //
       // Please note that translating a java.util.logging event into SLF4J incurs the
@@ -110,7 +115,7 @@ class LogbackGraylogLoggerConfigurator extends LoggerConfigurator {
       // logging
       val frameworkPackages = ctx.getFrameworkPackages
       frameworkPackages.add(classOf[play.Logger].getName)
-      frameworkPackages.add(classOf[play.api.Logger].getName)
+      frameworkPackages.add(classOf[api.Logger].getName)
 
       properties.foreach { case (k, v) => ctx.putProperty(k, v) }
 
@@ -123,6 +128,29 @@ class LogbackGraylogLoggerConfigurator extends LoggerConfigurator {
       StatusPrinter.printIfErrorsOccured(ctx)
 
     }
+  }
+
+  private def initialyzeGraylog(ctx: LoggerContext) = {
+    val rootLogger: Logger = ctx.getLogger(ch.qos.logback.classic.Logger.FQCN)
+    val hostname = "graylog.example.com"
+    val port = 12201
+    val gelfConfiguration = new GelfConfiguration(hostname, port)
+      .transport(GelfTransports.UDP)
+      .reconnectDelay(500)
+      .queueSize(512)
+      .connectTimeout(1000)
+      .tcpNoDelay(false)
+      .sendBufferSize(0) // causes the socket default to be used
+
+    val transport: GelfTransport = GelfTransports.create(gelfConfiguration)
+
+    val gelfClientAppender = new GelfClientAppender(transport, hostname)
+
+    gelfClientAppender.setContext(ctx)
+
+    gelfClientAppender.start
+
+    rootLogger.addAppender(gelfClientAppender)
   }
 
   /**
