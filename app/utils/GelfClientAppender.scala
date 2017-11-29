@@ -23,6 +23,11 @@ class GelfClientAppender(transport: GelfTransport, hostname: String) extends App
     }
   }
 
+  override def stop() = {
+    transport.stop()
+    started = false
+  }
+
   private def convertToGelfMessage(event: ILoggingEvent) = {
     new GelfMessageBuilder(event.getFormattedMessage, hostname)
       .timestamp(event.getTimeStamp / 1000d)

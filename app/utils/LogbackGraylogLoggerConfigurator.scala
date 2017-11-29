@@ -20,6 +20,9 @@ import play.api._
   */
 class LogbackGraylogLoggerConfigurator extends LoggerConfigurator {
 
+  var gelfClientAppender: GelfClientAppender = null
+
+
   def loggerFactory: ILoggerFactory = {
     StaticLoggerBinder.getSingleton.getLoggerFactory
   }
@@ -144,7 +147,7 @@ class LogbackGraylogLoggerConfigurator extends LoggerConfigurator {
 
     val transport: GelfTransport = GelfTransports.create(gelfConfiguration)
 
-    val gelfClientAppender = new GelfClientAppender(transport, hostname)
+    gelfClientAppender = new GelfClientAppender(transport, hostname)
 
     gelfClientAppender.setContext(ctx)
 
