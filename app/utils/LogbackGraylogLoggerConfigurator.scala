@@ -135,10 +135,9 @@ class LogbackGraylogLoggerConfigurator extends LoggerConfigurator {
 
   private def initialyzeGraylog(ctx: LoggerContext) = {
     println("initialyzeGraylog")
-    val rootLogger: Logger = ctx.getLogger("root")// correct name??
+    val rootLogger: Logger = ctx.getLogger("root")
     println("rootlogger name: " + rootLogger.getName)
     val hostname = "graylog.example.com"
-//    val hostname = "oaisjfoaisjdfoiajuzwbfz"
     val port = 12201
     val gelfConfiguration = new GelfConfiguration(hostname, port)
       .transport(GelfTransports.UDP)
