@@ -145,7 +145,7 @@ class LogbackGraylogLoggerConfigurator extends LoggerConfigurator {
       .queueSize(512)
       .connectTimeout(1000)
       .tcpNoDelay(false)
-      .sendBufferSize(10) // causes the socket default to be used
+      .sendBufferSize(-1)
 
     val transport: GelfTransport = GelfTransports.create(gelfConfiguration)
 
