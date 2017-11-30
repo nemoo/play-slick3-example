@@ -134,16 +134,19 @@ class LogbackGraylogLoggerConfigurator extends LoggerConfigurator {
   }
 
   private def initialyzeGraylog(ctx: LoggerContext) = {
-    val rootLogger: Logger = ctx.getLogger(ch.qos.logback.classic.Logger.FQCN)
+    println("initialyzeGraylog")
+    val rootLogger: Logger = ctx.getLogger("root")// correct name??
+    println("rootlogger name: " + rootLogger.getName)
     val hostname = "graylog.example.com"
+//    val hostname = "oaisjfoaisjdfoiajuzwbfz"
     val port = 12201
     val gelfConfiguration = new GelfConfiguration(hostname, port)
-      .transport(GelfTransports.UDP)
+      .transport(GelfTransports.TCP)
       .reconnectDelay(500)
       .queueSize(512)
       .connectTimeout(1000)
       .tcpNoDelay(false)
-      .sendBufferSize(0) // causes the socket default to be used
+      .sendBufferSize(1000) // causes the socket default to be used
 
     val transport: GelfTransport = GelfTransports.create(gelfConfiguration)
 

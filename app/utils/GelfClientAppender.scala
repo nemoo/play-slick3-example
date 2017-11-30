@@ -12,9 +12,15 @@ import org.graylog2.gelfclient.transport.GelfTransport
 class GelfClientAppender(transport: GelfTransport, hostname: String) extends AppenderBase[ILoggingEvent]{
 
 
-  override def append(eventObject: ILoggingEvent) = append(convertToGelfMessage(eventObject))
+  println("GelfClientAppender instantiated")
+
+  override def append(eventObject: ILoggingEvent) = {
+    println("GelfClientAppender: append: " + eventObject.getMessage)
+    append(convertToGelfMessage(eventObject))
+  }
 
   def append(gelfMessage: GelfMessage): Unit = {
+    println("GelfClientAppender: append: " + gelfMessage.getMessage)
     try
       transport.send(gelfMessage)
     catch {

@@ -28,6 +28,7 @@ extends BaseController {
   val logger = Logger(this.getClass())
 
   def signin = silhouette.UnsecuredAction { implicit request: Request[AnyContent] =>
+    logger.info("signin page")
     Ok(views.html.signin())
   }
 
