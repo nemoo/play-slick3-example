@@ -141,12 +141,12 @@ class LogbackGraylogLoggerConfigurator extends LoggerConfigurator {
 //    val hostname = "oaisjfoaisjdfoiajuzwbfz"
     val port = 12201
     val gelfConfiguration = new GelfConfiguration(hostname, port)
-      .transport(GelfTransports.TCP)
+      .transport(GelfTransports.UDP)
       .reconnectDelay(500)
       .queueSize(512)
       .connectTimeout(1000)
       .tcpNoDelay(false)
-      .sendBufferSize(1000) // causes the socket default to be used
+      .sendBufferSize(10) // causes the socket default to be used
 
     val transport: GelfTransport = GelfTransports.create(gelfConfiguration)
 

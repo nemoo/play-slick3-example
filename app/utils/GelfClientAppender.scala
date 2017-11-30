@@ -30,6 +30,7 @@ class GelfClientAppender(transport: GelfTransport, hostname: String) extends App
   }
 
   override def stop() = {
+    println("GelfClientAppender stopped")
     transport.stop()
     started = false
   }
