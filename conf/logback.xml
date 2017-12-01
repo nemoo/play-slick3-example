@@ -16,10 +16,30 @@
         <appender-ref ref="STDOUT" />
     </appender>
 
-    <appender name="GELF" class="utils.GelfClientAppender">
-        <encoder>
-            <pattern>%coloredLevel %logger{15} - %message%n%xException{10}</pattern>
-        </encoder>
+    <appender name="GELF" class="de.siegmar.logbackgelf.GelfUdpAppender">
+        <graylogHost>graylog.example.com</graylogHost>
+        <graylogPort>12201</graylogPort>
+        <maxChunkSize>508</maxChunkSize>
+        <useCompression>true</useCompression>
+        <layout class="de.siegmar.logbackgelf.GelfLayout">
+            <originHost>localhost</originHost>
+            <includeRawMessage>false</includeRawMessage>
+            <includeMarker>true</includeMarker>
+            <includeMdcData>true</includeMdcData>
+            <includeCallerData>false</includeCallerData>
+            <includeRootCauseData>false</includeRootCauseData>
+            <includeLevelName>false</includeLevelName>
+            <shortPatternLayout class="ch.qos.logback.classic.PatternLayout">
+                <pattern>%m%nopex</pattern>
+            </shortPatternLayout>
+            <fullPatternLayout class="ch.qos.logback.classic.PatternLayout">
+                <pattern>%m</pattern>
+            </fullPatternLayout>
+            <staticField>app_name:backend</staticField>
+            <!--<staticField>os_arch:${os.arch}</staticField>-->
+            <!--<staticField>os_name:${os.name}</staticField>-->
+            <!--<staticField>os_version:${os.version}</staticField>-->
+        </layout>
     </appender>
 
     <logger name="play" level="INFO" />
@@ -27,7 +47,7 @@
     <logger name="slick.jdbc.JdbcBackend.statement"  level="INFO" /> <!-- Will log all statements -->
     <logger name="com.zaxxer.hikari" level="ERROR"/>
 
-    <root level="INFO">
+    <root level="TRACE">
         <appender-ref ref="ASYNCSTDOUT" />
         <appender-ref ref="GELF" />
     </root>

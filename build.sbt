@@ -28,7 +28,7 @@ libraryDependencies ++= Seq(
     "com.mohiva" %% "play-silhouette-crypto-jca" % "5.0.0",
     "net.codingwell" %% "scala-guice" % "4.1.0",
     "com.iheart" %% "ficus" % "1.4.1",
-    "org.graylog2" % "gelfclient" % "1.4.2.1"
+    "de.siegmar" % "logback-gelf" % "1.0.4"
 )
 
 
