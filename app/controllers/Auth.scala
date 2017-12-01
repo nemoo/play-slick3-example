@@ -28,12 +28,7 @@ extends BaseController {
   val logger = Logger(this.getClass())
 
   def signin = silhouette.UnsecuredAction { implicit request: Request[AnyContent] =>
-
-    (1 to 1000).foreach{_=>
-      logger.info("logtest")
-      Thread.sleep(200)
-    }
-
+    logger.info("signin")
     Ok(views.html.signin())
   }
 

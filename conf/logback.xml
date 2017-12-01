@@ -6,11 +6,11 @@
 
     <conversionRule conversionWord="coloredLevel" converterClass="play.api.libs.logback.ColoredLevel" />
 
-    <!--<appender name="STDOUT" class="ch.qos.logback.core.ConsoleAppender">-->
-        <!--<encoder>-->
-            <!--<pattern>%coloredLevel %logger{15} - %message%n%xException{10}</pattern>-->
-        <!--</encoder>-->
-    <!--</appender>-->
+    <appender name="STDOUT" class="ch.qos.logback.core.ConsoleAppender">
+        <encoder>
+            <pattern>%coloredLevel %logger{15} - %message%n%xException{10}</pattern>
+        </encoder>
+    </appender>
 
     <appender name="ASYNCSTDOUT" class="ch.qos.logback.classic.AsyncAppender">
         <appender-ref ref="STDOUT" />
@@ -35,10 +35,8 @@
             <fullPatternLayout class="ch.qos.logback.classic.PatternLayout">
                 <pattern>%m</pattern>
             </fullPatternLayout>
-            <staticField>app_name:backend</staticField>
-            <!--<staticField>os_arch:${os.arch}</staticField>-->
-            <!--<staticField>os_name:${os.name}</staticField>-->
-            <!--<staticField>os_version:${os.version}</staticField>-->
+            <staticField>instance:composer</staticField>
+            <staticField>environment:devrelease</staticField>
         </layout>
     </appender>
 
@@ -47,7 +45,7 @@
     <logger name="slick.jdbc.JdbcBackend.statement"  level="INFO" /> <!-- Will log all statements -->
     <logger name="com.zaxxer.hikari" level="ERROR"/>
 
-    <root level="TRACE">
+    <root level="INFO">
         <appender-ref ref="ASYNCSTDOUT" />
         <appender-ref ref="GELF" />
     </root>
