@@ -3,8 +3,6 @@ Play 2.6 and Slick 3.2
 
 An example app using Play Framework 2.6 and Slick 3.2.
 
-New: This branch uses the non-blocking slick api for database access. If you want to see an even more minimalist way to use slick, check out the [blocking](https://github.com/nemoo/play-slick3-example/tree/blocking) branch. 
-
 * Most templates stop at hello world. This template shows you how you can structure your app into controllers and repositories.
 * It shows how to model relationships between entities and perform basic operations on entities.
 * It shows how to handle situations where various database operations have to be performed within a single transaction.
