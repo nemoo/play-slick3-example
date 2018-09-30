@@ -14,9 +14,11 @@ import com.mohiva.play.silhouette.persistence.daos.{DelegableAuthInfoDAO, InMemo
 import models.User
 import net.ceedubs.ficus.Ficus._
 import net.ceedubs.ficus.readers.ArbitraryTypeReader._
+import net.ceedubs.ficus.readers.ValueReader
 import net.codingwell.scalaguice.ScalaModule
 import play.api.Configuration
-import play.api.mvc.CookieHeaderEncoding
+import com.typesafe.config.Config
+import play.api.mvc.{Cookie, CookieHeaderEncoding}
 import utils.{AuthEnv, SecurityErrorHandler, UserService}
 
 import scala.concurrent.ExecutionContext.Implicits.global
@@ -24,6 +26,20 @@ import scala.concurrent.ExecutionContext.Implicits.global
 
 
 class SilhouetteModule extends AbstractModule with ScalaModule{
+
+  implicit val sameSiteReader: ValueReader[Option[Option[Cookie.SameSite]]] =
+    (config: Config, path: String) => {
+      if (config.hasPathOrNull(path)) {
+        if (config.getIsNull(path))
+          Some(None)
+        else {
+          Some(Cookie.SameSite.parse(config.getString(path)))
+        }
+      } else {
+        None
+      }
+    }
+
   override def configure(): Unit = {
     bind[Silhouette[AuthEnv]].to[SilhouetteProvider[AuthEnv]]
     bind[SecuredErrorHandler].to[SecurityErrorHandler]
