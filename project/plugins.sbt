@@ -4,7 +4,7 @@
 
 resolvers += "Typesafe repository" at "http://repo.typesafe.com/typesafe/releases/"
 
-addSbtPlugin("com.typesafe.play" % "sbt-plugin" % "2.7.0-M3")
+addSbtPlugin("com.typesafe.play" % "sbt-plugin" % "2.7.0-RC3")
 
 
 addSbtPlugin("com.jamesward" %% "play-auto-refresh" % "0.0.16")
