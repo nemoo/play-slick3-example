@@ -1,5 +1,6 @@
 Play 2.7, Slick 3.2 
 ==================
+[![Build Status](https://travis-ci.org/nemoo/play-slick3-example.svg?branch=play27)](https://travis-ci.org/nemoo/play-slick3-example)
 
 An example app using Play Framework 2.7, Slick 3.2
 
