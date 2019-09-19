@@ -1,7 +1,7 @@
-Play 2.6, Slick 3.2 
+Play 2.7, Slick 3.2 
 ==================
 
-An example app using Play Framework 2.6, Slick 3.2
+An example app using Play Framework 2.7, Slick 3.2
 
 For maximum simplicity of the code, this project uses the [blocking-slick api](https://github.com/takezoe/blocking-slick).     
 
