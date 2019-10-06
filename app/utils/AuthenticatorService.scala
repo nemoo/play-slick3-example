@@ -17,7 +17,7 @@ class AuthenticatorServiceImpl @Inject() extends AuthenticatorService{
   override def authenticate(user: String, password: String): Future[Unit] ={
 
     logger.debug(s"authenticated $user")
-    Future.successful(Unit)
+    Future.successful(())
   }
 
 }
