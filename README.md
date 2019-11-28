@@ -1,7 +1,7 @@
-Play 2.6 and Slick 3.2
+Play 2.7 and Slick 4
 ==================
 
-An example app using Play Framework 2.6 and Slick 3.2.
+An example app using Play Framework 2.7 and Slick 4
 
 * Most templates stop at hello world. This template shows you how you can structure your app into controllers and repositories.
 * It shows how to model relationships between entities and perform basic operations on entities.
