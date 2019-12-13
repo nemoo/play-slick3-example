@@ -2,7 +2,7 @@ package controllers
 
 import javax.inject.{Inject, Singleton}
 
-import models.{ProjectRepo, TaskRepo, TestData, User}
+import models.{ProjectRepo, TaskRepo, User}
 import play.api.mvc._
 import com.github.takezoe.slick.blocking.BlockingH2Driver.blockingApi._
 import com.mohiva.play.silhouette
@@ -19,7 +19,6 @@ import scala.concurrent.{ExecutionContext, Future}
 class Application @Inject()(
                              projectRepo: ProjectRepo,
                              taskRepo: TaskRepo,
-                             testData: TestData,
                              weather: WeatherService,
                              silhouette: Silhouette[AuthEnv],
                              val controllerComponents: ControllerComponents,
@@ -27,16 +26,10 @@ class Application @Inject()(
                            )(protected val dbConfigProvider: DatabaseConfigProvider,
                              val ex: ExecutionContext )
                            extends BaseController {
+                             
+  
 
   val db = dbConfigProvider.get[JdbcProfile].db
-
-  //generate some test data
-  db.withSession { implicit session =>
-    if (projectRepo.all.length + taskRepo.all.length == 0 && env.isDev) {
-      testData.createTestData
-    }
-  }
-
 
   def test = silhouette.UnsecuredAction { implicit request: Request[AnyContent] =>
     Ok("test")
