@@ -1,7 +1,7 @@
-Play 2.7 and Slick 4
+Play 2.8 and Slick 5
 ==================
 
-An example app using Play Framework 2.7 and Slick 4
+An example app using Play Framework 2.8 and Slick 5
 
 * Most templates stop at hello world. This template shows you how you can structure your app into controllers and repositories.
 * It shows how to model relationships between entities and perform basic operations on entities.
@@ -12,7 +12,7 @@ An example app using Play Framework 2.7 and Slick 4
 Repositories handle interactions with domain aggregates. All public methods are exposed as Futures. Internally, in some cases we need to compose various queries into one block that is carried out within a single transaction. In this case, the individual queries return DBIO query objects. A single public method runs those queries and exposes a Future to the client.
 
 
-1. Install [JDK 8](http://www.oracle.com/technetwork/java/javase/downloads/index.html).
+1. Install [Java JDK 11](https://adoptopenjdk.net/).
 2. Install [SBT](http://www.scala-sbt.org/download.html)
 3. Run `sbt ~run` for continuous recompilation of the server app.
 
