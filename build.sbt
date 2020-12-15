@@ -16,7 +16,7 @@ resolvers += Resolver.jcenterRepo
 libraryDependencies ++= Seq(
     "com.typesafe.play" %% "play-slick" % "5.0.0",
     "com.typesafe.play" %% "play-slick-evolutions" % "5.0.0",
-    "com.typesafe.play" %% "play-json" % "2.8.1",
+    "com.typesafe.play" %% "play-json" % "2.9.1",
     "com.h2database" % "h2" % "1.4.192",
     "org.scalatestplus.play" %% "scalatestplus-play" % "4.0.3" % "test",
     specs2 % Test,
