@@ -8,6 +8,7 @@ tmp
 dist
 bin
 /.idea
+/.bsp
 /*.iml
 /out
 /.idea_modules
