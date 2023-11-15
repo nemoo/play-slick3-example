@@ -17,7 +17,7 @@ libraryDependencies ++= Seq(
     "com.typesafe.play" %% "play-slick" % "5.0.0",
     "com.typesafe.play" %% "play-slick-evolutions" % "5.0.0",
     "com.typesafe.play" %% "play-json" % "2.8.1",
-    "com.h2database" % "h2" % "1.4.192",
+    "com.h2database" % "h2" % "1.4.200",
     "org.scalatestplus.play" %% "scalatestplus-play" % "7.0.0" % "test",
     specs2 % Test,
     guice
