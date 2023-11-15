@@ -4,7 +4,7 @@ version := "1.0-SNAPSHOT"
 
 lazy val root = (project in file(".")).enablePlugins(PlayScala)
 
-scalaVersion := "2.13.4"
+scalaVersion := "2.13.11"
 
 routesGenerator := InjectedRoutesGenerator
 
@@ -18,7 +18,7 @@ libraryDependencies ++= Seq(
     "com.typesafe.play" %% "play-slick-evolutions" % "5.0.0",
     "com.typesafe.play" %% "play-json" % "2.8.1",
     "com.h2database" % "h2" % "1.4.192",
-    "org.scalatestplus.play" %% "scalatestplus-play" % "4.0.3" % "test",
+    "org.scalatestplus.play" %% "scalatestplus-play" % "7.0.0" % "test",
     specs2 % Test,
     guice
 )
