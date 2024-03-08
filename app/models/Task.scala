@@ -1,9 +1,7 @@
 package models
 
 import javax.inject.Inject
-
 import play.api.db.slick.DatabaseConfigProvider
-
 import slick.jdbc.JdbcProfile
 
 import scala.concurrent.Future
@@ -20,9 +18,9 @@ case class Task(id: Long, color: String, status: TaskStatus.Value, project: Long
 }
 
 object TaskStatus extends Enumeration {
-  val ready = Value("ready")
-  val set = Value("set")
-  val go = Value("go")
+  val ready: TaskStatus.Value = Value("ready")
+  val set: TaskStatus.Value = Value("set")
+  val go: TaskStatus.Value = Value("go")
 }
 
 class TaskRepo @Inject()(protected val dbConfigProvider: DatabaseConfigProvider) {
@@ -68,12 +66,12 @@ class TaskRepo @Inject()(protected val dbConfigProvider: DatabaseConfigProvider)
   def _deleteAllInProject(projectId: Long): DBIO[Int] =
     Tasks.filter(_.project === projectId).delete
 
-  private[models] class TasksTable(tag: Tag) extends Table[Task](tag, "TASK") {
+  private[models] class TasksTable(tag: Tag) extends Table[Task](tag, "task") {
 
-    def id = column[Long]("ID", O.AutoInc, O.PrimaryKey)
-    def color = column[String]("COLOR")
-    def status = column[TaskStatus.Value]("STATUS")
-    def project = column[Long]("PROJECT")
+    def id = column[Long]("id", O.AutoInc, O.PrimaryKey)
+    def color = column[String]("color")
+    def status = column[TaskStatus.Value]("status")
+    def project = column[Long]("project")
 
     def * = (id, color, status, project) <> (Task.tupled, Task.unapply)
     def ? = (id.?, color.?, status.?, project.?).shaped.<>({ r => import r._; _1.map(_ => Task.tupled((_1.get, _2.get, _3.get, _4.get))) }, (_: Any) => throw new Exception("Inserting into ? projection not supported."))
