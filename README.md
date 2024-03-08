@@ -1,7 +1,7 @@
-Play 2.8 and Slick 5
+Play 3 and Slick via DBIO 
 ==================
 
-An example app using Play Framework 2.8 and Slick 5
+An example app using Play Framework 3 and Slick 
 
 * Most templates stop at hello world. This template shows you how you can structure your app into controllers and repositories.
 * It shows how to model relationships between entities and perform basic operations on entities.
