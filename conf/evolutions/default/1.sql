@@ -1,25 +1,18 @@
-# DC schema
- 
 # --- !Ups
 
-
-CREATE TABLE PROJECT (
-    ID integer NOT NULL AUTO_INCREMENT PRIMARY KEY,
-    NAME varchar(255) NOT NULL
+CREATE TABLE project (
+    id SERIAL NOT NULL PRIMARY KEY,
+    name varchar(255) NOT NULL
 );
 
-
-CREATE TABLE TASK (
-    ID integer NOT NULL AUTO_INCREMENT PRIMARY KEY,
-    COLOR varchar(255) NOT NULL,
-    STATUS varchar(255) NOT NULL,
-    PROJECT integer NOT NULL,
-    FOREIGN KEY (PROJECT) REFERENCES PROJECT (ID)
+CREATE TABLE task (
+    id SERIAL NOT NULL PRIMARY KEY,
+    color varchar(255) NOT NULL,
+    status varchar(255) NOT NULL,
+    project integer NOT NULL REFERENCES project (ID)
 );
 
-
- 
 # --- !Downs
 
-DROP TABLE TASK;
-DROP TABLE PROJECT;
+DROP TABLE task;
+DROP TABLE project;
