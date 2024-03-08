@@ -2,8 +2,10 @@
 //logLevel := Level.Warn
 
 
-resolvers += "Typesafe repository" at "https://repo.typesafe.com/typesafe/releases/"
-
-addSbtPlugin("com.typesafe.play" % "sbt-plugin" % "2.8.16")
+addSbtPlugin("org.playframework" % "sbt-plugin" % "3.0.2")
 
 addSbtPlugin("com.jamesward" %% "play-auto-refresh" % "0.0.18")
+
+ThisBuild / libraryDependencySchemes ++= Seq(
+  "org.scala-lang.modules" %% "scala-xml" % VersionScheme.Always
+)
