@@ -29,7 +29,7 @@ class TaskRepo @Inject()(protected val dbConfigProvider: DatabaseConfigProvider)
   import dbConfig.profile.api._
   private[models] val Tasks = TableQuery[TasksTable]
 
-  implicit val taskStatusColumnType = MappedColumnType.base[TaskStatus.Value, String](
+  implicit val taskStatusColumnType: BaseColumnType[TaskStatus.Value] = MappedColumnType.base[TaskStatus.Value, String](
     _.toString, string => TaskStatus.withName(string))
   
   def findById(id: Long): Future[Task] =
@@ -73,8 +73,7 @@ class TaskRepo @Inject()(protected val dbConfigProvider: DatabaseConfigProvider)
     def status = column[TaskStatus.Value]("status")
     def project = column[Long]("project")
 
-    def * = (id, color, status, project) <> (Task.tupled, Task.unapply)
-    def ? = (id.?, color.?, status.?, project.?).shaped.<>({ r => import r._; _1.map(_ => Task.tupled((_1.get, _2.get, _3.get, _4.get))) }, (_: Any) => throw new Exception("Inserting into ? projection not supported."))
+    def * = (id, color, status, project) <> ((Task.apply _).tupled, Task.unapply)
   }
   
 }

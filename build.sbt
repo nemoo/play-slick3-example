@@ -8,7 +8,7 @@ version := "1.0-SNAPSHOT"
 
 lazy val root = (project in file(".")).enablePlugins(PlayScala)
 
-scalaVersion := "2.13.12"
+scalaVersion := "3.3.3"
 
 routesGenerator := InjectedRoutesGenerator
 
@@ -30,7 +30,6 @@ libraryDependencies += "org.playframework.silhouette" %% "play-silhouette-passwo
 libraryDependencies += "org.playframework.silhouette" %% "play-silhouette-persistence" % "10.0.0"
 libraryDependencies += "org.playframework.silhouette" %% "play-silhouette-crypto-jca" % "10.0.0"
 libraryDependencies += "net.codingwell" %% "scala-guice" % "6.0.0"
-libraryDependencies += "com.iheart" %% "ficus" % "1.4.7"
 
 ThisBuild / libraryDependencySchemes ++= Seq(
     "org.scala-lang.modules" %% "scala-xml" % VersionScheme.Always

@@ -64,8 +64,7 @@ class ProjectRepo @Inject()(taskRepo: TaskRepo)(protected val dbConfigProvider: 
     def id = column[Long]("id", O.AutoInc, O.PrimaryKey)
     def name = column[String]("name")
 
-    def * = (id, name) <> (Project.tupled, Project.unapply)
-    def ? = (id.?, name.?).shaped.<>({ r => import r._; _1.map(_ => Project.tupled((_1.get, _2.get))) }, (_: Any) => throw new Exception("Inserting into ? projection not supported."))
+    def * = (id, name) <> ((Project.apply _).tupled, Project.unapply)
 
   }
 }
