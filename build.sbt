@@ -16,8 +16,8 @@ libraryDependencies += "org.playframework" %% "play-slick" % "6.2.0"
 libraryDependencies += "org.playframework" %% "play-slick-evolutions" % "6.2.0"
 libraryDependencies += "org.playframework" %% "play-json" % "3.0.5"
 libraryDependencies += "org.scalatestplus.play" %% "scalatestplus-play" % "7.0.2" % "test"
-libraryDependencies += "com.dimafeng" %% "testcontainers-scala-scalatest" % "0.40.15" % "test"
-libraryDependencies += "com.dimafeng" %% "testcontainers-scala-postgresql" % "0.40.15" % "test"
+libraryDependencies += "com.dimafeng" %% "testcontainers-scala-scalatest" % "0.40.17" % "test"
+libraryDependencies += "com.dimafeng" %% "testcontainers-scala-postgresql" % "0.40.17" % "test"
 
 libraryDependencies += "org.postgresql" % "postgresql" % "42.7.6"
 libraryDependencies += specs2 % Test
